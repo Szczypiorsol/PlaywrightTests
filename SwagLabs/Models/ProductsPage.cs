@@ -32,28 +32,28 @@ namespace SwagLabs.Models
             return productsPage;
         }
 
-        public async Task<int> GetProductsCountAsync()
+        public async Task AssertProductsCountAsync(int ExpectedCount)
         {
             EnsureInitialized();
-            return await _productsList.GetItemCountAsync();
+            await _productsList.AssertItemCountAsync(ExpectedCount);
         }
 
-        public async Task<string> GetProductNameByOrdinalNumberAsync(int ordinalNumber)
+        public async Task AssertProductNameByOrdinalNumberAsync(int ordinalNumber, string ExpectedProductName)
         {
             EnsureInitialized();
-            return await _productsList.GetItemElementTextAsync(ordinalNumber, GetBy.CssSelector, "div.inventory_item_name ");
+            await _productsList.AssertItemElementTextAsync(ExpectedProductName, ordinalNumber, GetBy.CssSelector, "div.inventory_item_name ");
+        }
+
+        public async Task AssertPriceByOrdinalNumberAsync(int ordinalNumber, string ExpectedPrice)
+        {
+            EnsureInitialized();
+            await _productsList.AssertItemElementTextAsync(ExpectedPrice, ordinalNumber, GetBy.CssSelector, "div.inventory_item_price");
         }
 
         public async Task ClickOnProductByOrdinalNumberAsync(int ordinalNumber)
         {
             EnsureInitialized();
             await _productsList.ClickOnItemElementAsync(ordinalNumber, "button");
-        }
-
-        public async Task<string> GetPriceByOrdinalNumberAsync(int ordinalNumber)
-        {
-            EnsureInitialized();
-            return await _productsList.GetItemElementTextAsync(ordinalNumber, GetBy.CssSelector, "div.inventory_item_price");
         }
 
         public async Task SelectSortOptionAsync(string optionText)

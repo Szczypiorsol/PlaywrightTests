@@ -29,10 +29,10 @@ namespace SwagLabs.Models
             return checkoutCompletePage;
         }
 
-        public async Task<string> GetThankYouMessageAsync()
+        public async Task AssertThankYouMessageAsync(string ExpectedText)
         {
             EnsureInitialized();
-            return await _thankYouMessageTextBox.GetTextAsync();
+            await _thankYouMessageTextBox.AssertTextAsync(ExpectedText);
         }
 
         public async Task<ProductsPage> ClickBackHomeAsync()

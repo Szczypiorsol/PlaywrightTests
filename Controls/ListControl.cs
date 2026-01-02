@@ -10,18 +10,16 @@ namespace Controls
         private readonly ILocator _listItemLocator = GetLocator(page, getByItem, AriaRole.Listitem, itemName);
         private readonly string _listItemName = itemName;
 
-        public ILocator ListItemLocator => _listItemLocator;
-
-        public async Task<int> GetItemCountAsync()
+        public async Task AssertItemCountAsync(int ExpectedCount)
         {
-            return await _listItemLocator.CountAsync();
+            await Assertions.Expect(_listItemLocator).ToHaveCountAsync(ExpectedCount);
         }
 
-        public async Task<string> GetItemElementTextAsync(int OrdinalNumber, GetBy getBy, string name)
+        public async Task AssertItemElementTextAsync(string ExpectedText, int OrdinalNumber, GetBy getBy, string name)
         {
             await CheckIfItemIsVisibleAsync(OrdinalNumber);
-            var text = await _listItemLocator.Nth(OrdinalNumber).And(GetLocator(_page, getBy, AriaRole.None, name)).TextContentAsync();
-            return text ?? string.Empty;
+            await Assertions.Expect(_listItemLocator.Nth(OrdinalNumber).Locator(GetLocator(_page, getBy, AriaRole.None, name)))
+                .ToHaveTextAsync(ExpectedText);
         }
 
         public async Task ClickOnItemElementAsync(int OrdinalNumber, string name)

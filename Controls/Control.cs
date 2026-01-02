@@ -29,8 +29,6 @@ namespace Controls
             _name = name;
         }
 
-        public ILocator Locator => _locator;
-
         public static ILocator GetLocator(IPage page, GetBy getBy, AriaRole ariaRole, string name)
         {
             return getBy switch

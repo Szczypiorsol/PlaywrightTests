@@ -32,22 +32,17 @@ namespace SwagLabs.Models
             return cartPage;
         }
 
-        public async Task<int> GetCartItemsCountAsync()
+        public async Task AssertCartItemsCountAsync(int ExpectedCount)
         {
             EnsureInitialized();
-            return await _cartList.GetItemCountAsync();
+            await _cartList.AssertItemCountAsync(ExpectedCount);
         }
 
-        public async Task<string> GetCartItemNameAsync(int OrdinalNumber)
+        public async Task AssertCartItemAsync(int OrdinalNumber, string ExpecterCartItemName, string ExpecterCartItemPrice)
         {
             EnsureInitialized();
-            return await _cartList.GetItemElementTextAsync(OrdinalNumber, GetBy.CssSelector, "div.inventory_item_name");
-        }
-
-        public async Task<string> GetCartItemPriceAsync(int OrdinalNumber)
-        {
-            EnsureInitialized();
-            return await _cartList.GetItemElementTextAsync(OrdinalNumber, GetBy.CssSelector, "div.inventory_item_price");
+            await _cartList.AssertItemElementTextAsync(ExpecterCartItemName, OrdinalNumber, GetBy.CssSelector, "div.inventory_item_name");
+            await _cartList.AssertItemElementTextAsync(ExpecterCartItemPrice, OrdinalNumber, GetBy.CssSelector, "div.inventory_item_price");
         }
 
         public async Task RemoveCartItemAsync(int OrdinalNumber)
@@ -67,36 +62,6 @@ namespace SwagLabs.Models
             EnsureInitialized();
             await _checkoutButton.ClickAsync();
             return await CheckoutPage.InitAsync(_page);
-        }
-
-        public ILocator GetCartListLocatorAsync()
-        {
-            EnsureInitialized();
-            return _cartList.Locator;
-        }
-
-        public ILocator GetCartItemLocatorAsync()
-        {
-            EnsureInitialized();
-            return _cartList.ListItemLocator;
-        }
-
-        public ILocator GetCartItemLocatorByOrdinalNumberAsync(int ordinalNumber)
-        {
-            EnsureInitialized();
-            return _cartList.GetItemLocatorByOrdinalNumber(ordinalNumber);
-        }
-
-        public ILocator GetCartItemNameLocatorByOrdinalNumberAsync(int ordinalNumber)
-        {
-            EnsureInitialized();
-            return _cartList.GetItemLocatorByOrdinalNumber(ordinalNumber).Locator("div.inventory_item_name");
-        }
-
-        public ILocator GetCartItemPriceLocatorByOrdinalNumberAsync(int ordinalNumber)
-        {
-            EnsureInitialized();
-            return _cartList.GetItemLocatorByOrdinalNumber(ordinalNumber).Locator("div.inventory_item_price");
         }
     }
 }

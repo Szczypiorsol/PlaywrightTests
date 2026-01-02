@@ -10,9 +10,9 @@ namespace Controls
             await _locator.FillAsync(text);
         }
 
-        public async Task<string> GetTextAsync()
+        public async Task AssertTextAsync(string ExpectedText)
         {
-            return await _locator.TextContentAsync() ?? string.Empty;
+            await Assertions.Expect(_locator).ToHaveTextAsync(ExpectedText);
         }
     }
 }
