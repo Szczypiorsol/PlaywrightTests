@@ -32,17 +32,17 @@ namespace SwagLabs.Models
             return productsPage;
         }
 
-        public async Task AssertProductsCountAsync(int ExpectedCount)
+        public async Task AssertProductsCountAsync(int expectedCount)
         {
             EnsureInitialized();
-            await _productsList.AssertItemCountAsync(ExpectedCount);
+            await _productsList.AssertItemCountAsync(expectedCount);
         }
 
-        public async Task AssertProductByOrdinalNumberAsync(int ordinalNumber, string ExpectedProductName, string ExpectedPrice)
+        public async Task AssertProductByOrdinalNumberAsync(int ordinalNumber, string expectedProductName, string expectedPrice)
         {
             EnsureInitialized();
-            await _productsList.AssertItemElementTextAsync(ExpectedProductName, ordinalNumber, GetBy.CssSelector, "div.inventory_item_name ");
-            await _productsList.AssertItemElementTextAsync(ExpectedPrice, ordinalNumber, GetBy.CssSelector, "div.inventory_item_price");
+            await _productsList.AssertItemElementTextAsync(expectedProductName, ordinalNumber, GetBy.CssSelector, "div.inventory_item_name ");
+            await _productsList.AssertItemElementTextAsync(expectedPrice, ordinalNumber, GetBy.CssSelector, "div.inventory_item_price");
         }
 
         public async Task ClickOnProductByOrdinalNumberAsync(int ordinalNumber)

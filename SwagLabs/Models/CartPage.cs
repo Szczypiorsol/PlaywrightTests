@@ -32,23 +32,23 @@ namespace SwagLabs.Models
             return cartPage;
         }
 
-        public async Task AssertCartItemsCountAsync(int ExpectedCount)
+        public async Task AssertCartItemsCountAsync(int expectedCount)
         {
             EnsureInitialized();
-            await _cartList.AssertItemCountAsync(ExpectedCount);
+            await _cartList.AssertItemCountAsync(expectedCount);
         }
 
-        public async Task AssertCartItemAsync(int OrdinalNumber, string ExpecterCartItemName, string ExpecterCartItemPrice)
+        public async Task AssertCartItemAsync(int ordinalNumber, string expecterCartItemName, string expecterCartItemPrice)
         {
             EnsureInitialized();
-            await _cartList.AssertItemElementTextAsync(ExpecterCartItemName, OrdinalNumber, GetBy.CssSelector, "div.inventory_item_name");
-            await _cartList.AssertItemElementTextAsync(ExpecterCartItemPrice, OrdinalNumber, GetBy.CssSelector, "div.inventory_item_price");
+            await _cartList.AssertItemElementTextAsync(expecterCartItemName, ordinalNumber, GetBy.CssSelector, "div.inventory_item_name");
+            await _cartList.AssertItemElementTextAsync(expecterCartItemPrice, ordinalNumber, GetBy.CssSelector, "div.inventory_item_price");
         }
 
-        public async Task RemoveCartItemAsync(int OrdinalNumber)
+        public async Task RemoveCartItemAsync(int ordinalNumber)
         {
             EnsureInitialized();
-            await _cartList.ClickOnItemElementAsync(OrdinalNumber, "button");
+            await _cartList.ClickOnItemElementAsync(ordinalNumber, "button");
         }
 
         public async Task ClickContinueShoppingAsync()

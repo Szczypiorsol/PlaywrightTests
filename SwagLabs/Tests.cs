@@ -1,5 +1,4 @@
-﻿using Microsoft.Playwright;
-using SwagLabs.Models;
+﻿using SwagLabs.Models;
 
 namespace SwagLabs
 {
@@ -15,12 +14,9 @@ namespace SwagLabs
         [TestCase("visual_user")]
         public async Task SellItemPositivePath(string login)
         {
-            using var playwright = await Microsoft.Playwright.Playwright.CreateAsync();
-            await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });
-            var page = await browser.NewPageAsync();
-            await page.GotoAsync("https://www.saucedemo.com/");
+            await Page.GotoAsync("https://www.saucedemo.com/");
 
-            LoginPage loginPage = await LoginPage.InitAsync(page);
+            LoginPage loginPage = await LoginPage.InitAsync(Page);
             ProductsPage productsPage = await loginPage.LoginAsync(login, "secret_sauce");
             await productsPage.ClickOnProductByOrdinalNumberAsync(1);
             CartPage cartPage = await productsPage.ClickOnCartButtonAsync();
@@ -38,19 +34,16 @@ namespace SwagLabs
             await checkoutOverviewPage.AssertSummaryTotalAsync("Total: $10.79");
             CheckoutCompletePage checkoutCompletePage = await checkoutOverviewPage.ClickFinishAsync();
             await checkoutCompletePage.AssertThankYouMessageAsync("Thank you for your order!");
-            productsPage = await checkoutCompletePage.ClickBackHomeAsync();
+            _ = await checkoutCompletePage.ClickBackHomeAsync();
         }
 
         [Test]
         public async Task WrongPasswordLogin()
         {
-            using var playwright = await Microsoft.Playwright.Playwright.CreateAsync();
-            await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });
-            var page = await browser.NewPageAsync();
-            await page.GotoAsync("https://www.saucedemo.com/");
+            await Page.GotoAsync("https://www.saucedemo.com/");
 
-            LoginPage loginPage = await LoginPage.InitAsync(page);
-            loginPage = await loginPage.LoginWithInvalidCredentialsAsync("standard_user", "wrong_password");
+            LoginPage loginPage = await LoginPage.InitAsync(Page);
+            _ = await loginPage.LoginWithInvalidCredentialsAsync("standard_user", "wrong_password");
         }
 
         [TestCase("standard_user")]
@@ -61,12 +54,9 @@ namespace SwagLabs
         [TestCase("visual_user")]
         public async Task SortProducts(string login)
         {
-            using var playwright = await Microsoft.Playwright.Playwright.CreateAsync();
-            await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });
-            var page = await browser.NewPageAsync();
-            await page.GotoAsync("https://www.saucedemo.com/");
+            await Page.GotoAsync("https://www.saucedemo.com/");
 
-            LoginPage loginPage = await LoginPage.InitAsync(page);
+            LoginPage loginPage = await LoginPage.InitAsync(Page);
             ProductsPage productsPage = await loginPage.LoginAsync(login, "secret_sauce");
             await productsPage.AssertProductsCountAsync(6);
             await productsPage.SelectSortOptionAsync("Name (Z to A)");
@@ -107,12 +97,9 @@ namespace SwagLabs
         [TestCase("visual_user")]
         public async Task SellAllItems(string login)
         {
-            using var playwright = await Microsoft.Playwright.Playwright.CreateAsync();
-            await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });
-            var page = await browser.NewPageAsync();
-            await page.GotoAsync("https://www.saucedemo.com/");
+            await Page.GotoAsync("https://www.saucedemo.com/");
 
-            LoginPage loginPage = await LoginPage.InitAsync(page);
+            LoginPage loginPage = await LoginPage.InitAsync(Page);
             ProductsPage productsPage = await loginPage.LoginAsync(login, "secret_sauce");
             await productsPage.AssertProductsCountAsync(6);
             for (int i = 0; i < 6; i++)
@@ -132,7 +119,7 @@ namespace SwagLabs
             await checkoutOverviewPage.AssertSummaryTotalAsync("Total: $140.34");
             CheckoutCompletePage checkoutCompletePage = await checkoutOverviewPage.ClickFinishAsync();
             await checkoutCompletePage.AssertThankYouMessageAsync("Thank you for your order!");
-            productsPage = await checkoutCompletePage.ClickBackHomeAsync();
+            _ = await checkoutCompletePage.ClickBackHomeAsync();
         }
     }
 }

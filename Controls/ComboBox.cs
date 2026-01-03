@@ -1,7 +1,4 @@
 ﻿using Microsoft.Playwright;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using static Controls.Control;
 
 namespace Controls
@@ -16,11 +13,11 @@ namespace Controls
             await _locator.SelectOptionAsync(new SelectOptionValue { Label = itemText });
         }
 
-        public async Task CheckIfItemIsVisibleAsync(int OrdinalNumber)
+        public async Task CheckIfItemIsVisibleAsync(int ordinalNumber)
         {
-            if (_listItemLocator.Nth(OrdinalNumber).IsVisibleAsync().GetAwaiter().GetResult() != true)
+            if (_listItemLocator.Nth(ordinalNumber).IsVisibleAsync().GetAwaiter().GetResult() != true)
             {
-                throw new Exception($"ListItem {_listItemName}_{OrdinalNumber} is not visible.");
+                throw new Exception($"ListItem {_listItemName}_{ordinalNumber} is not visible.");
             }
         }
     }

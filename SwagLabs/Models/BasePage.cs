@@ -1,13 +1,10 @@
 ﻿using Microsoft.Playwright;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SwagLabs.Models
 {
     public abstract class BasePage(IPage page)
     {
-        protected readonly IPage _page = page;
+        protected readonly IPage _page = page ?? throw new ArgumentNullException(nameof(page));
         protected bool _isInitialized = false;
 
         public abstract Task InitAsync();
@@ -16,7 +13,7 @@ namespace SwagLabs.Models
         {
             if (!_isInitialized)
             {
-                throw new Exception("Page is not initialized. Call InitAsync() before using the page.");
+                throw new InvalidOperationException("Page is not initialized. Call InitAsync() before using the page.");
             }
         }
     }

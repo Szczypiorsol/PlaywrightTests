@@ -1,5 +1,4 @@
 ﻿using Microsoft.Playwright;
-using System.Threading.Tasks;
 using static Controls.Control;
 
 namespace Controls
@@ -10,29 +9,29 @@ namespace Controls
         private readonly ILocator _listItemLocator = GetLocator(page, getByItem, AriaRole.Listitem, itemName);
         private readonly string _listItemName = itemName;
 
-        public async Task AssertItemCountAsync(int ExpectedCount)
+        public async Task AssertItemCountAsync(int expectedCount)
         {
-            await Assertions.Expect(_listItemLocator).ToHaveCountAsync(ExpectedCount);
+            await Assertions.Expect(_listItemLocator).ToHaveCountAsync(expectedCount);
         }
 
-        public async Task AssertItemElementTextAsync(string ExpectedText, int OrdinalNumber, GetBy getBy, string name)
+        public async Task AssertItemElementTextAsync(string expectedText, int ordinalNumber, GetBy getBy, string name)
         {
-            await CheckIfItemIsVisibleAsync(OrdinalNumber);
-            await Assertions.Expect(_listItemLocator.Nth(OrdinalNumber).Locator(GetLocator(_page, getBy, AriaRole.None, name)))
-                .ToHaveTextAsync(ExpectedText);
+            await CheckIfItemIsVisibleAsync(ordinalNumber);
+            await Assertions.Expect(_listItemLocator.Nth(ordinalNumber).Locator(GetLocator(_page, getBy, AriaRole.None, name)))
+                .ToHaveTextAsync(expectedText);
         }
 
-        public async Task ClickOnItemElementAsync(int OrdinalNumber, string name)
+        public async Task ClickOnItemElementAsync(int ordinalNumber, string name)
         {
-            await CheckIfItemIsVisibleAsync(OrdinalNumber);
-            await _listItemLocator.Nth(OrdinalNumber).Locator(name).ClickAsync();
+            await CheckIfItemIsVisibleAsync(ordinalNumber);
+            await _listItemLocator.Nth(ordinalNumber).Locator(name).ClickAsync();
         }
 
-        public async Task CheckIfItemIsVisibleAsync(int OrdinalNumber)
+        public async Task CheckIfItemIsVisibleAsync(int ordinalNumber)
         {
-            if (_listItemLocator.Nth(OrdinalNumber).IsVisibleAsync().GetAwaiter().GetResult() != true)
+            if (_listItemLocator.Nth(ordinalNumber).IsVisibleAsync().GetAwaiter().GetResult() != true)
             {
-                throw new Exception($"ListItem {_listItemName}_{OrdinalNumber} is not visible.");
+                throw new Exception($"ListItem {_listItemName}_{ordinalNumber} is not visible.");
             }
         }
 

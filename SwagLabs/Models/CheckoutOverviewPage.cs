@@ -1,6 +1,5 @@
 ﻿using Controls;
 using Microsoft.Playwright;
-using System.Globalization;
 using static Controls.Control;
 
 namespace SwagLabs.Models
@@ -48,47 +47,47 @@ namespace SwagLabs.Models
             return checkoutOverviewPage;
         }
 
-        public async Task AssertOverviewItemsCountAsync(int ExpectedCount)
+        public async Task AssertOverviewItemsCountAsync(int expectedCount)
         {
             EnsureInitialized();
-            await _overviewItemList.AssertItemCountAsync(ExpectedCount);
+            await _overviewItemList.AssertItemCountAsync(expectedCount);
         }
 
-        public async Task AssertOverviewItemAtAsync(int Index, string ExpectedName, string ExpectedPrice)
+        public async Task AssertOverviewItemAtAsync(int index, string expectedName, string expectedPrice)
         {
             EnsureInitialized();
-            await _overviewItemList.AssertItemElementTextAsync(ExpectedName, Index, GetBy.CssSelector, "div.inventory_item_name");
-            await _overviewItemList.AssertItemElementTextAsync(ExpectedPrice, Index, GetBy.CssSelector, "div.inventory_item_price");
+            await _overviewItemList.AssertItemElementTextAsync(expectedName, index, GetBy.CssSelector, "div.inventory_item_name");
+            await _overviewItemList.AssertItemElementTextAsync(expectedPrice, index, GetBy.CssSelector, "div.inventory_item_price");
         }
 
-        public async Task AssertPaymentInformationAsync(string ExpectedPaymentInformation)
+        public async Task AssertPaymentInformationAsync(string expectedPaymentInformation)
         {
             EnsureInitialized();
-            await _paymentInformationTextBox.AssertTextAsync(ExpectedPaymentInformation);
+            await _paymentInformationTextBox.AssertTextAsync(expectedPaymentInformation);
         }
 
-        public async Task AssertShippingInformationAsync(string ExpectedShippingInformation)
+        public async Task AssertShippingInformationAsync(string expectedShippingInformation)
         {
             EnsureInitialized();
-            await _shippingInformationTextBox.AssertTextAsync(ExpectedShippingInformation);
+            await _shippingInformationTextBox.AssertTextAsync(expectedShippingInformation);
         }
 
-        public async Task AssertSummarySubtotalAsync(string ExpectedSummarySubtotal)
+        public async Task AssertSummarySubtotalAsync(string expectedSummarySubtotal)
         {
             EnsureInitialized();
-            await _summarySubtotalTextBox.AssertTextAsync(ExpectedSummarySubtotal);
+            await _summarySubtotalTextBox.AssertTextAsync(expectedSummarySubtotal);
         }
 
-        public async Task AssertSummaryTaxAsync(string ExpectedSummaryTax)
+        public async Task AssertSummaryTaxAsync(string expectedSummaryTax)
         {
             EnsureInitialized();
-            await _summaryTaxTextBox.AssertTextAsync(ExpectedSummaryTax);
+            await _summaryTaxTextBox.AssertTextAsync(expectedSummaryTax);
         }
 
-        public async Task AssertSummaryTotalAsync(string ExpectedSummaryTotal)
+        public async Task AssertSummaryTotalAsync(string expectedSummaryTotal)
         {
             EnsureInitialized();
-            await _summaryTotalTextBox.AssertTextAsync(ExpectedSummaryTotal);
+            await _summaryTotalTextBox.AssertTextAsync(expectedSummaryTotal);
         }
 
         public async Task<CheckoutPage> ClickCancelAsync()
