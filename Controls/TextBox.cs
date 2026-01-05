@@ -1,9 +1,10 @@
 ﻿using Microsoft.Playwright;
-using static Controls.Control;
+using NUnit.Framework;
 
 namespace Controls
 {
-    public class TextBox(IPage page, GetBy getBy, string name) : Control(GetLocator(page, getBy, AriaRole.Textbox, name), name)
+    public class TextBox(IPage page, Control.GetBy getBy, string name, string description) 
+        : Control(GetLocator(page, getBy, AriaRole.Textbox, name), name, description)
     {
         public async Task EnterTextAsync(string text)
         {
@@ -12,7 +13,15 @@ namespace Controls
 
         public async Task AssertTextAsync(string expectedText)
         {
-            await Assertions.Expect(_locator).ToHaveTextAsync(expectedText);
+            try
+            {
+                await Assertions.Expect(_locator).ToHaveTextAsync(expectedText);
+            }
+            catch (PlaywrightException ex)
+            {
+                string actualText = await _locator.InnerTextAsync();
+                throw new AssertionException($"TextBox {_description} should have text '{expectedText}', but has '{actualText}'", ex);
+            }
         }
     }
 }

@@ -10,11 +10,19 @@ namespace SwagLabs.Models
         private readonly Button _continueShoppingButton;
         private readonly Button _checkoutButton;
 
-        public CartPage(IPage page) : base(page)
+        public CartPage(IPage page) : base(page, "[CartPage]")
         {
-            _cartList = new ListControl(_page, GetBy.CssSelector, "div.cart_list", GetBy.CssSelector, "div.cart_item");
-            _continueShoppingButton = new Button(_page, GetBy.Role, "Continue Shopping");
-            _checkoutButton = new Button(_page, GetBy.Role, "Checkout");
+            _cartList = new ListControl(
+                page: _page, 
+                getByList: GetBy.CssSelector, 
+                listName: "div.cart_list", 
+                listDescription: $"{_pageName}_[ProductsList]", 
+                getByItem: GetBy.CssSelector, 
+                itemName: "div.cart_item", 
+                listItemDescription: $"{_pageName}_[Product]"
+                );
+            _continueShoppingButton = new Button(_page, GetBy.Role, "Continue Shopping", $"{_pageName}_[ContinueShoppingButton]");
+            _checkoutButton = new Button(_page, GetBy.Role, "Checkout", $"{_pageName}_[CheckoutButton]");
         }
 
         public override async Task InitAsync()
@@ -25,9 +33,9 @@ namespace SwagLabs.Models
                 await _continueShoppingButton.CheckIsVisibleAsync();
                 await _checkoutButton.CheckIsVisibleAsync();
             }
-            catch (PlaywrightException ex)
+            catch (AssertionException ex)
             {
-                throw new Exception("Cart Page did not load correctly.", ex);
+                throw new AssertionException($"{_pageName} did not load correctly.", ex);
             }
 
             _isInitialized = true;
@@ -49,8 +57,14 @@ namespace SwagLabs.Models
         public async Task AssertCartItemAsync(int ordinalNumber, string expecterCartItemName, string expecterCartItemPrice)
         {
             EnsureInitialized();
-            await _cartList.AssertItemElementTextAsync(expecterCartItemName, ordinalNumber, GetBy.CssSelector, "div.inventory_item_name");
-            await _cartList.AssertItemElementTextAsync(expecterCartItemPrice, ordinalNumber, GetBy.CssSelector, "div.inventory_item_price");
+            await _cartList.AssertItemElementTextAsync(expecterCartItemName, ordinalNumber, GetBy.CssSelector, "div.inventory_item_name", "Name");
+            await _cartList.AssertItemElementTextAsync(
+                expecterCartItemPrice, 
+                ordinalNumber, 
+                GetBy.CssSelector, 
+                "div.inventory_item_price", 
+                "Price"
+                );
         }
 
         public async Task RemoveCartItemAsync(int ordinalNumber)

@@ -15,16 +15,34 @@ namespace SwagLabs.Models
         private readonly Button _cancelButton;
         private readonly Button _finishButton;
 
-        public CheckoutOverviewPage(IPage page) : base(page)
+        public CheckoutOverviewPage(IPage page) : base(page, "[CheckoutOverviewPage]")
         {
-            _overviewItemList = new ListControl(_page, GetBy.CssSelector, "div.cart_list", GetBy.CssSelector, "div.cart_item");
-            _paymentInformationTextBox = new TextBox(_page, GetBy.TestId, "payment-info-value");
-            _shippingInformationTextBox = new TextBox(_page, GetBy.TestId, "shipping-info-value");
-            _summarySubtotalTextBox = new TextBox(_page, GetBy.CssSelector, "div.summary_subtotal_label");
-            _summaryTaxTextBox = new TextBox(_page, GetBy.CssSelector, "div.summary_tax_label");
-            _summaryTotalTextBox = new TextBox(_page, GetBy.CssSelector, "div.summary_total_label");
-            _cancelButton = new Button(_page, GetBy.Role, "Cancel");
-            _finishButton = new Button(_page, GetBy.Role, "Finish");
+            _overviewItemList = new ListControl(
+                _page, 
+                GetBy.CssSelector, 
+                "div.cart_list",
+                $"{_pageName}_[ProductsList]", 
+                GetBy.CssSelector, 
+                "div.cart_item",
+                $"{_pageName}_[Product]"
+                );
+            _paymentInformationTextBox = new TextBox(_page, GetBy.TestId, "payment-info-value", $"{_pageName}_[PaymentInformationTextBox]");
+            _shippingInformationTextBox = new TextBox(
+                _page, 
+                GetBy.TestId, 
+                "shipping-info-value",
+                $"{_pageName}_[ShippingInformationTextBox]"
+                );
+            _summarySubtotalTextBox = new TextBox(
+                _page, 
+                GetBy.CssSelector, 
+                "div.summary_subtotal_label",
+                $"{_pageName}_[SummarySubtotalTextBox]"
+                );
+            _summaryTaxTextBox = new TextBox(_page, GetBy.CssSelector, "div.summary_tax_label", $"{_pageName}_[SummaryTaxTextBox]");
+            _summaryTotalTextBox = new TextBox(_page, GetBy.CssSelector, "div.summary_total_label", $"{_pageName}_[SummaryTotalTextBox]");
+            _cancelButton = new Button(_page, GetBy.Role, "Cancel", $"{_pageName}_[CancelButton]");
+            _finishButton = new Button(_page, GetBy.Role, "Finish", $"{_pageName}_[FinishButton]");
         }
 
         public override async Task InitAsync()
@@ -40,9 +58,9 @@ namespace SwagLabs.Models
                 await _cancelButton.CheckIsVisibleAsync();
                 await _finishButton.CheckIsVisibleAsync();
             }
-            catch (PlaywrightException ex)
+            catch (AssertionException ex)
             {
-                throw new Exception("Checkout Overview Page did not load correctly.", ex);
+                throw new AssertionException($"{_pageName} did not load correctly.", ex);
             }
 
             _isInitialized = true;
@@ -64,8 +82,8 @@ namespace SwagLabs.Models
         public async Task AssertOverviewItemAtAsync(int index, string expectedName, string expectedPrice)
         {
             EnsureInitialized();
-            await _overviewItemList.AssertItemElementTextAsync(expectedName, index, GetBy.CssSelector, "div.inventory_item_name");
-            await _overviewItemList.AssertItemElementTextAsync(expectedPrice, index, GetBy.CssSelector, "div.inventory_item_price");
+            await _overviewItemList.AssertItemElementTextAsync(expectedName, index, GetBy.CssSelector, "div.inventory_item_name", "Name");
+            await _overviewItemList.AssertItemElementTextAsync(expectedPrice, index, GetBy.CssSelector, "div.inventory_item_price", "Price");
         }
 
         public async Task AssertPaymentInformationAsync(string expectedPaymentInformation)

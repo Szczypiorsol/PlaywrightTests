@@ -2,10 +2,11 @@
 
 namespace SwagLabs.Models
 {
-    public abstract class BasePage(IPage page)
+    public abstract class BasePage(IPage page, string pageName)
     {
         protected readonly IPage _page = page ?? throw new ArgumentNullException(nameof(page));
         protected bool _isInitialized = false;
+        protected readonly string _pageName = pageName;
 
         public abstract Task InitAsync();
 
@@ -13,7 +14,7 @@ namespace SwagLabs.Models
         {
             if (!_isInitialized)
             {
-                throw new InvalidOperationException("Page is not initialized. Call InitAsync() before using the page.");
+                throw new InvalidOperationException($"{_pageName} is not initialized. Call InitAsync() before using the page.");
             }
         }
     }

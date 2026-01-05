@@ -1,24 +1,62 @@
 ﻿using Microsoft.Playwright;
-using static Controls.Control;
+using NUnit.Framework;
 
 namespace Controls
 {
-    public class ListControl(IPage page, GetBy getByList, string listName, GetBy getByItem, string itemName) : Control(GetLocator(page, getByList, AriaRole.List, listName), listName)
+    public class ListControl : Control
     {
-        private readonly IPage _page = page;
-        private readonly ILocator _listItemLocator = GetLocator(page, getByItem, AriaRole.Listitem, itemName);
-        private readonly string _listItemName = itemName;
+        private readonly IPage _page;
+        private readonly ILocator _listItemLocator;
+        private readonly string _listItemName;
+        private readonly string _listItemDescription;
+
+        public ListControl(IPage page, GetBy getByList, string listName, string listDescription,
+            GetBy getByItem, string itemName, string listItemDescription) 
+            : base(GetLocator(page, getByList, AriaRole.List, listName), listName, listDescription)
+        {
+            if (string.IsNullOrEmpty(listItemDescription))
+                throw new ArgumentException("ListItemDescription cannot be null or empty.", nameof(listItemDescription));
+
+            ILocator listItemLocator = GetLocator(page, getByItem, AriaRole.Listitem, itemName);
+
+            _listItemLocator = listItemLocator ?? throw new ArgumentException("ListItemLocator cannot be null.");
+
+            _page = page;
+            _listItemName = itemName;
+            _listItemDescription = listItemDescription;
+        }
 
         public async Task AssertItemCountAsync(int expectedCount)
         {
-            await Assertions.Expect(_listItemLocator).ToHaveCountAsync(expectedCount);
+            try
+            {
+                await Assertions.Expect(_listItemLocator).ToHaveCountAsync(expectedCount);
+            }
+            catch (PlaywrightException ex)
+            {
+                int actualCount = await _listItemLocator.CountAsync();
+                throw new AssertionException($"List {_description} should contain {expectedCount} items, but contains {actualCount}", ex);
+            }
         }
 
-        public async Task AssertItemElementTextAsync(string expectedText, int ordinalNumber, GetBy getBy, string name)
+        public async Task AssertItemElementTextAsync(string expectedText, int ordinalNumber, GetBy getBy, string name, string elementDescription)
         {
             await CheckIfItemIsVisibleAsync(ordinalNumber);
-            await Assertions.Expect(_listItemLocator.Nth(ordinalNumber).Locator(GetLocator(_page, getBy, AriaRole.None, name)))
-                .ToHaveTextAsync(expectedText);
+
+            try
+            {
+                await Assertions.Expect(_listItemLocator.Nth(ordinalNumber).Locator(GetLocator(_page, getBy, AriaRole.None, name)))
+                    .ToHaveTextAsync(expectedText);
+            }
+            catch (PlaywrightException ex)
+            {
+                string actualText = await _listItemLocator.Nth(ordinalNumber).Locator(GetLocator(_page, getBy, AriaRole.None, name))
+                    .InnerTextAsync();
+                throw new AssertionException(
+                    $"{elementDescription}_{_listItemDescription}_{ordinalNumber} should have text '{expectedText}', but has '{actualText}'", 
+                    ex
+                    );
+            }
         }
 
         public async Task ClickOnItemElementAsync(int ordinalNumber, string name)
@@ -27,11 +65,15 @@ namespace Controls
             await _listItemLocator.Nth(ordinalNumber).Locator(name).ClickAsync();
         }
 
-        public async Task CheckIfItemIsVisibleAsync(int ordinalNumber)
+        public async Task CheckIfItemIsVisibleAsync(int ordinalNumber, string message = "")
         {
-            if (_listItemLocator.Nth(ordinalNumber).IsVisibleAsync().GetAwaiter().GetResult() != true)
+            try
             {
-                throw new Exception($"ListItem {_listItemName}_{ordinalNumber} is not visible.");
+                await Assertions.Expect(_listItemLocator.Nth(ordinalNumber)).ToBeVisibleAsync();
+            }
+            catch (PlaywrightException ex)
+            {
+                throw new AssertionException($"ListItem {_listItemName}_{ordinalNumber} is not visible. {message}", ex);
             }
         }
 

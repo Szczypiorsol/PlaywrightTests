@@ -12,13 +12,13 @@ namespace SwagLabs.Models
         private readonly Button _cancelButton;
         private readonly Button _continueButton;
 
-        public CheckoutPage(IPage page) : base(page)
+        public CheckoutPage(IPage page) : base(page, "[CheckoutPage]")
         {
-            _firstNameTextBox = new TextBox(_page, GetBy.Placeholder, "First Name");
-            _lastNameTextBox = new TextBox(_page, GetBy.Placeholder, "Last Name");
-            _postalCodeTextBox = new TextBox(_page, GetBy.Placeholder, "Zip/Postal Code");
-            _cancelButton = new Button(_page, GetBy.Role, "Cancel");
-            _continueButton = new Button(_page, GetBy.Role, "Continue");
+            _firstNameTextBox = new TextBox(_page, GetBy.Placeholder, "First Name", $"{_pageName}_[FirstNameTextBox]");
+            _lastNameTextBox = new TextBox(_page, GetBy.Placeholder, "Last Name", $"{_pageName}_[LastNameTextBox]");
+            _postalCodeTextBox = new TextBox(_page, GetBy.Placeholder, "Zip/Postal Code", $"{_pageName}_[PostalCodeTextBox]");
+            _cancelButton = new Button(_page, GetBy.Role, "Cancel", $"{_pageName}_[CancelButton]");
+            _continueButton = new Button(_page, GetBy.Role, "Continue", $"{_pageName}_[ContinueButton]");
         }
 
         public override async Task InitAsync()
@@ -31,9 +31,9 @@ namespace SwagLabs.Models
                 await _cancelButton.CheckIsVisibleAsync();
                 await _continueButton.CheckIsVisibleAsync();
             }
-            catch (PlaywrightException ex)
+            catch (AssertionException ex)
             {
-                throw new Exception("Checkout Page did not load correctly.", ex);
+                throw new AssertionException($"{_pageName} did not load correctly.", ex);
             }
 
             _isInitialized = true;

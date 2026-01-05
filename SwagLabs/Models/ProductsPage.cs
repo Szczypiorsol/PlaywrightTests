@@ -10,11 +10,27 @@ namespace SwagLabs.Models
         private readonly ComboBox _sortComboBox;
         private readonly ListControl _productsList;
 
-        public ProductsPage(IPage page) : base(page)
+        public ProductsPage(IPage page) : base(page, "[ProductsPage]")
         {
-            _cartButton = new Button(_page, GetBy.CssSelector, "a.shopping_cart_link");
-            _sortComboBox = new ComboBox(_page, GetBy.CssSelector, "select.product_sort_container", GetBy.CssSelector, "option");
-            _productsList = new ListControl(_page, GetBy.CssSelector, "div.inventory_list", GetBy.CssSelector, "div.inventory_item");
+            _cartButton = new Button(_page, GetBy.CssSelector, "a.shopping_cart_link", "ProductsPageCartButton");
+            _sortComboBox = new ComboBox(
+                _page, 
+                GetBy.CssSelector, 
+                "select.product_sort_container",
+                $"{_pageName}_[SortComboBox]", 
+                GetBy.CssSelector, 
+                "option",
+                $"{_pageName}_[SortOption]"
+                );
+            _productsList = new ListControl(
+                _page, 
+                GetBy.CssSelector, 
+                "div.inventory_list",
+                $"{_pageName}_[ProductsList]", 
+                GetBy.CssSelector, 
+                "div.inventory_item",
+                $"{_pageName}_[Product]"
+                );
         }
 
         public override async Task InitAsync()
@@ -25,9 +41,9 @@ namespace SwagLabs.Models
                 await _sortComboBox.CheckIsVisibleAsync();
                 await _productsList.CheckIsVisibleAsync();
             }
-            catch (PlaywrightException ex)
+            catch (AssertionException ex)
             {
-                throw new Exception("Products Page did not load correctly.", ex);
+                throw new AssertionException($"{_pageName} did not load correctly.", ex);
             }
 
             _isInitialized = true;
@@ -49,8 +65,8 @@ namespace SwagLabs.Models
         public async Task AssertProductByOrdinalNumberAsync(int ordinalNumber, string expectedProductName, string expectedPrice)
         {
             EnsureInitialized();
-            await _productsList.AssertItemElementTextAsync(expectedProductName, ordinalNumber, GetBy.CssSelector, "div.inventory_item_name ");
-            await _productsList.AssertItemElementTextAsync(expectedPrice, ordinalNumber, GetBy.CssSelector, "div.inventory_item_price");
+            await _productsList.AssertItemElementTextAsync(expectedProductName, ordinalNumber, GetBy.CssSelector, "div.inventory_item_name ", "Name");
+            await _productsList.AssertItemElementTextAsync(expectedPrice, ordinalNumber, GetBy.CssSelector, "div.inventory_item_price", "Price");
         }
 
         public async Task ClickOnProductByOrdinalNumberAsync(int ordinalNumber)

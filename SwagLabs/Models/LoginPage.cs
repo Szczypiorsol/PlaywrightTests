@@ -10,11 +10,11 @@ namespace SwagLabs.Models
         private readonly TextBox _passwordTextBox;
         private readonly Button _loginButton;
 
-        public LoginPage(IPage page) : base(page)
+        public LoginPage(IPage page) : base(page, "[LoginPage]")
         {
-            _usernameTextBox = new TextBox(_page, GetBy.Role, "Username");
-            _passwordTextBox = new TextBox(_page, GetBy.Role, "Password");
-            _loginButton = new Button(_page, GetBy.Role, "Login");
+            _usernameTextBox = new TextBox(_page, GetBy.Role, "Username", $"{_pageName}_[UsernameTextBox]");
+            _passwordTextBox = new TextBox(_page, GetBy.Role, "Password", $"{_pageName}_[PasswordTextBox]");
+            _loginButton = new Button(_page, GetBy.Role, "Login", $"{_pageName}_[LoginButton]");
         }
 
         public override async Task InitAsync()
@@ -25,9 +25,9 @@ namespace SwagLabs.Models
                 await _passwordTextBox.CheckIsVisibleAsync();
                 await _loginButton.CheckIsVisibleAsync();
             }
-            catch (PlaywrightException ex)
+            catch (AssertionException ex)
             {
-                throw new Exception("Login Page did not load correctly.", ex);
+                throw new AssertionException($"{_pageName} did not load correctly.", ex);
             }
 
             _isInitialized = true;

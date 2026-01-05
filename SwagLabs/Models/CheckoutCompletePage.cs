@@ -9,10 +9,10 @@ namespace SwagLabs.Models
         private readonly TextBox _thankYouMessageTextBox;
         private readonly Button _backHomeButton;
 
-        public CheckoutCompletePage(IPage page) : base(page)
+        public CheckoutCompletePage(IPage page) : base(page, "[CheckoutCompletePage]")
         {
-            _thankYouMessageTextBox = new TextBox(_page, GetBy.CssSelector, "h2.complete-header");
-            _backHomeButton = new Button(_page, GetBy.Role, "Back Home");
+            _thankYouMessageTextBox = new TextBox(_page, GetBy.CssSelector, "h2.complete-header", $"{_pageName}_[ThankYouMessageTextBox]");
+            _backHomeButton = new Button(_page, GetBy.Role, "Back Home", $"{_pageName}_[BackHomeButton]");
         }
 
         public override async Task InitAsync()
@@ -22,9 +22,9 @@ namespace SwagLabs.Models
                 await _thankYouMessageTextBox.CheckIsVisibleAsync();
                 await _backHomeButton.CheckIsVisibleAsync();
             }
-            catch (PlaywrightException ex)
+            catch (AssertionException ex)
             {
-                throw new Exception("Checkout Complete Page did not load correctly.", ex);
+                throw new AssertionException($"{_pageName} did not load correctly.", ex);
             }
 
             _isInitialized = true;

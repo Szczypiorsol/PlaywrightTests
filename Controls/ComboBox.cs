@@ -1,12 +1,27 @@
 ﻿using Microsoft.Playwright;
-using static Controls.Control;
+using NUnit.Framework;
 
 namespace Controls
 {
-    public class ComboBox(IPage page, GetBy getByList, string listName, GetBy getByItem, string itemName) : Control(GetLocator(page, getByList, AriaRole.List, listName), listName)
+    public class ComboBox : Control
     {
-        private readonly ILocator _listItemLocator = GetLocator(page, getByItem, AriaRole.Listitem, itemName);
-        private readonly string _listItemName = itemName;
+        private readonly ILocator _comboBoxItemLocator;
+        private readonly string _comboBoxItemName;
+        private readonly string _comboBoxItemDescription;
+
+        public ComboBox(IPage page, GetBy getByList, string comboBoxName, string description,
+            GetBy getByItem, string itemName, string itemDescription) 
+            : base(GetLocator(page, getByList, AriaRole.List, comboBoxName), comboBoxName, description)
+        {
+            if (string.IsNullOrEmpty(itemDescription))
+                throw new ArgumentException("ItemDescription cannot be null or empty.", nameof(itemDescription));
+
+            ILocator comboBoxItemLocator = GetLocator(page, getByItem, AriaRole.Listitem, itemName);
+            
+            _comboBoxItemLocator = comboBoxItemLocator ?? throw new ArgumentException("ComboBoxItemLocator cannot be null.");
+            _comboBoxItemName = itemName;
+            _comboBoxItemDescription = itemDescription;
+        }
 
         public async Task SelectItemByTextAsync(string itemText)
         {
@@ -15,9 +30,13 @@ namespace Controls
 
         public async Task CheckIfItemIsVisibleAsync(int ordinalNumber)
         {
-            if (_listItemLocator.Nth(ordinalNumber).IsVisibleAsync().GetAwaiter().GetResult() != true)
+            try
             {
-                throw new Exception($"ListItem {_listItemName}_{ordinalNumber} is not visible.");
+                await _comboBoxItemLocator.Nth(ordinalNumber).IsVisibleAsync();
+            }
+            catch
+            {
+                throw new AssertionException($"ComboBoxItem {_comboBoxItemDescription}_{ordinalNumber} is not visible.");
             }
         }
     }
