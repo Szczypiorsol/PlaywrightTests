@@ -58,7 +58,7 @@ namespace SwagLabs.Models
                 await _cancelButton.CheckIsVisibleAsync();
                 await _finishButton.CheckIsVisibleAsync();
             }
-            catch (AssertionException ex)
+            catch (Exception ex) when (ex is AssertionException || ex is PlaywrightException)
             {
                 throw new AssertionException($"{_pageName} did not load correctly.", ex);
             }

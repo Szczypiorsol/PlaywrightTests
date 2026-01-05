@@ -25,7 +25,7 @@ namespace SwagLabs.Models
                 await _passwordTextBox.CheckIsVisibleAsync();
                 await _loginButton.CheckIsVisibleAsync();
             }
-            catch (AssertionException ex)
+            catch (Exception ex) when (ex is AssertionException || ex is PlaywrightException)
             {
                 throw new AssertionException($"{_pageName} did not load correctly.", ex);
             }

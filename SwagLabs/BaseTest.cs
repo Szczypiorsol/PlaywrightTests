@@ -1,45 +1,60 @@
 ﻿using Microsoft.Playwright;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace SwagLabs
 {
-    public class BaseTest : PageTest
+    public class BaseTest
     {
-        private IPage? _page;
-        private IPlaywright? _playwright;
-        private IBrowser? _browser;
-
-        protected IPage PageInstance => _page ?? Page;
+        protected IPlaywright? PlaywrightInstance;
+        protected IBrowser? Browser;
+        protected IBrowserContext? BrowserContext;
+        protected IPage? PageInstance;
 
         [OneTimeSetUp]
-        public async Task OneTimeSetup()
+        public async Task OneTimeSetupAsync()
         {
-            if (Debugger.IsAttached)
-            {
-                _playwright = await Microsoft.Playwright.Playwright.CreateAsync();
-                _browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });
-                _page = await _browser.NewPageAsync();
-            }
+            PlaywrightInstance = await Playwright.CreateAsync();
+            Browser = await PlaywrightInstance.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = !Debugger.IsAttached });
         }
 
         [SetUp]
         public async Task Setup()
         {
+            // Każdy test dostaje własny context i stronę (izolacja)
+            BrowserContext = await Browser!.NewContextAsync();
+            PageInstance = await BrowserContext.NewPageAsync();
+
             if (Debugger.IsAttached)
             {
-                await _page.PauseAsync();
+                await PageInstance.PauseAsync();
+            }
+        }
+
+        [TearDown]
+        public async Task TearDownAsync()
+        {
+            if (BrowserContext != null)
+            {
+                await BrowserContext.CloseAsync();
+                BrowserContext = null;
+                PageInstance = null;
             }
         }
 
         [OneTimeTearDown]
-        public async Task OneTimeTearDown()
+        public async Task OneTimeTearDownAsync()
         {
-            if (_browser != null) await _browser.CloseAsync();
-            _playwright?.Dispose();
-        }
+            if (Browser != null)
+            {
+                await Browser.CloseAsync();
+                Browser = null;
+            }
 
+            if (PlaywrightInstance != null)
+            {
+                PlaywrightInstance.Dispose();
+                PlaywrightInstance = null;
+            }
+        }
     }
 }

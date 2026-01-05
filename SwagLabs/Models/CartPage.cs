@@ -33,7 +33,7 @@ namespace SwagLabs.Models
                 await _continueShoppingButton.CheckIsVisibleAsync();
                 await _checkoutButton.CheckIsVisibleAsync();
             }
-            catch (AssertionException ex)
+            catch (Exception ex) when (ex is AssertionException || ex is PlaywrightException)
             {
                 throw new AssertionException($"{_pageName} did not load correctly.", ex);
             }

@@ -41,7 +41,7 @@ namespace SwagLabs.Models
                 await _sortComboBox.CheckIsVisibleAsync();
                 await _productsList.CheckIsVisibleAsync();
             }
-            catch (AssertionException ex)
+            catch (Exception ex) when (ex is AssertionException || ex is PlaywrightException)
             {
                 throw new AssertionException($"{_pageName} did not load correctly.", ex);
             }
