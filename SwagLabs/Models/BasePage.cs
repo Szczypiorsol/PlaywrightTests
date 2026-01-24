@@ -34,6 +34,12 @@ namespace SwagLabs.Models
             }
         }
 
+        public async Task RefreshAsync()
+        {
+            EnsureInitialized();
+            await _page.ReloadAsync();
+        }
+
         public async Task<LoginPage> LogoutAsync()
         {
             if(_pageName == "LoginPage")

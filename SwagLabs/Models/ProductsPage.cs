@@ -9,6 +9,7 @@ namespace SwagLabs.Models
         private readonly Button _cartButton;
         private readonly ComboBox _sortComboBox;
         private readonly ListControl _productsList;
+        private readonly TextBox _numberOfProductsInCartTextBox;
 
         public ProductsPage(IPage page) : base(page, "[ProductsPage]")
         {
@@ -31,6 +32,7 @@ namespace SwagLabs.Models
                 "div.inventory_item",
                 $"{_pageName}_[Product]"
                 );
+            _numberOfProductsInCartTextBox = new TextBox(_page, GetBy.CssSelector, "span.shopping_cart_badge", $"{_pageName}_NumberOfProductsInCartTextBox");
         }
 
         public override async Task InitAsync()
@@ -71,6 +73,12 @@ namespace SwagLabs.Models
             EnsureInitialized();
             await _productsList.AssertItemElementTextAsync(expectedProductName, ordinalNumber, GetBy.CssSelector, "div.inventory_item_name ", "Name");
             await _productsList.AssertItemElementTextAsync(expectedPrice, ordinalNumber, GetBy.CssSelector, "div.inventory_item_price", "Price");
+        }
+
+        public async Task AssertNumberOfProductsInCartAsync(int expectedNumber)
+        {
+            EnsureInitialized();
+            await _numberOfProductsInCartTextBox.AssertTextAsync(expectedNumber.ToString());
         }
 
         public async Task<ProductsPage> ClickOnProductByOrdinalNumberAsync(int ordinalNumber)

@@ -22,7 +22,7 @@ namespace SwagLabs
         {
             await PageInstance.GotoAsync("https://www.saucedemo.com/");
             LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
-            
+
             loginPage = await loginPage.LoginWithInvalidCredentialsAsync(UserLogin, "wrong_password");
             await loginPage.AssertErrorMessageAsync("Epic sadface: Username and password do not match any user in this service");
         }
@@ -32,7 +32,7 @@ namespace SwagLabs
         {
             await PageInstance.GotoAsync("https://www.saucedemo.com/");
             LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
-            
+
             loginPage = await loginPage.LoginWithInvalidCredentialsAsync("admin_user", "secret_sauce");
             await loginPage.AssertErrorMessageAsync("Epic sadface: Username and password do not match any user in this service");
         }
@@ -68,7 +68,7 @@ namespace SwagLabs
         {
             await PageInstance.GotoAsync("https://www.saucedemo.com/");
             LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
-            
+
             ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
             await productsPage.AssertProductsCountAsync(6);
             productsPage = await productsPage.SelectSortOptionAsync("Name (Z to A)");
@@ -106,7 +106,7 @@ namespace SwagLabs
         {
             await PageInstance.GotoAsync("https://www.saucedemo.com/");
             LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
-            
+
             ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
             await productsPage.AssertProductsCountAsync(6);
             for (int i = 0; i < 6; i++)
@@ -285,6 +285,78 @@ namespace SwagLabs
             CheckoutCompletePage checkoutCompletePage = await checkoutOverviewPage.ClickFinishAsync();
             await checkoutCompletePage.AssertThankYouMessageAsync("Thank you for your order!");
             _ = await checkoutCompletePage.ClickBackHomeAsync();
+        }
+
+        [Test]
+        public async Task T12_When_PageIsRefreshed_CartShouldRemainUnchanged()
+        {
+            await PageInstance.GotoAsync("https://www.saucedemo.com/");
+            LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
+
+            ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
+            productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(0);
+            productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(3);
+            await productsPage.AssertNumberOfProductsInCartAsync(2);
+            await productsPage.RefreshAsync();
+            await productsPage.AssertNumberOfProductsInCartAsync(2);
+        }
+
+        [Test]
+        public async Task T13_When_UnauthenticatedUserAccessesCheckout_ShouldBeRedirectedToLogin()
+        {
+            await PageInstance.GotoAsync("https://www.saucedemo.com/checkout-step-two.html");
+            LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
+            await loginPage.AssertErrorMessageAsync("Epic sadface: You can only access '/checkout-step-two.html' when you are logged in.");
+        }
+
+        [Test]
+        public async Task T14_When_MultipleUsersPerformActions_Should_IsolateSessionsCorrectly()
+        {
+            await PageInstance.GotoAsync("https://www.saucedemo.com/");
+            LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
+
+            IBrowserContext BrowserContext2 = await Browser.NewContextAsync();
+            IPage pageInstance2 = await BrowserContext2.NewPageAsync();
+            await pageInstance2.GotoAsync("https://www.saucedemo.com/");
+            LoginPage loginPage2 = await LoginPage.InitAsync(pageInstance2);
+            string userToLogin = UserLogin == Users["StandardUser"] ? Users["VisualUser"] : Users["StandardUser"];
+            
+            ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
+            ProductsPage productsPage2 = await loginPage2.LoginAsync(userToLogin, "secret_sauce");
+            productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(1);
+            productsPage2 = await productsPage2.ClickOnProductByOrdinalNumberAsync(0);
+            CartPage cartPage = await productsPage.ClickOnCartButtonAsync();
+            CartPage cartPage2 = await productsPage2.ClickOnCartButtonAsync();
+            await cartPage.AssertCartItemsCountAsync(1);
+            await cartPage2.AssertCartItemsCountAsync(1);
+            await cartPage.AssertCartItemAsync(0, "Sauce Labs Bike Light", "$9.99");
+            await cartPage2.AssertCartItemAsync(0, "Sauce Labs Backpack", "$29.99");
+            CheckoutPage checkoutPage = await cartPage.ClickCheckoutAsync();
+            CheckoutPage checkoutPage2 = await cartPage2.ClickCheckoutAsync();
+            checkoutPage = await checkoutPage.FillCheckoutInformationAsync("John", "Doe", "12345");
+            checkoutPage2 = await checkoutPage2.FillCheckoutInformationAsync("Jane", "Smith", "54321");
+            CheckoutOverviewPage checkoutOverviewPage = await checkoutPage.ClickContinueAsync();
+            CheckoutOverviewPage checkoutOverviewPage2 = await checkoutPage2.ClickContinueAsync();
+            await checkoutOverviewPage.AssertOverviewItemsCountAsync(1);
+            await checkoutOverviewPage2.AssertOverviewItemsCountAsync(1);
+            await checkoutOverviewPage.AssertOverviewItemAtAsync(0, "Sauce Labs Bike Light", "$9.99");
+            await checkoutOverviewPage2.AssertOverviewItemAtAsync(0, "Sauce Labs Backpack", "$29.99");
+            await checkoutOverviewPage.AssertPaymentInformationAsync("SauceCard #31337");
+            await checkoutOverviewPage2.AssertPaymentInformationAsync("SauceCard #31337");
+            await checkoutOverviewPage.AssertShippingInformationAsync("Free Pony Express Delivery!");
+            await checkoutOverviewPage2.AssertShippingInformationAsync("Free Pony Express Delivery!");
+            await checkoutOverviewPage.AssertSummarySubtotalAsync("Item total: $9.99");
+            await checkoutOverviewPage2.AssertSummarySubtotalAsync("Item total: $29.99");
+            await checkoutOverviewPage.AssertSummaryTaxAsync("Tax: $0.80");
+            await checkoutOverviewPage2.AssertSummaryTaxAsync("Tax: $2.40");
+            await checkoutOverviewPage.AssertSummaryTotalAsync("Total: $10.79");
+            await checkoutOverviewPage2.AssertSummaryTotalAsync("Total: $32.39");
+            CheckoutCompletePage checkoutCompletePage = await checkoutOverviewPage.ClickFinishAsync();
+            CheckoutCompletePage checkoutCompletePage2 = await checkoutOverviewPage2.ClickFinishAsync();
+            await checkoutCompletePage.AssertThankYouMessageAsync("Thank you for your order!");
+            await checkoutCompletePage2.AssertThankYouMessageAsync("Thank you for your order!");
+            _ = await checkoutCompletePage.ClickBackHomeAsync();
+            _ = await checkoutCompletePage2.ClickBackHomeAsync();
         }
     }
 }
