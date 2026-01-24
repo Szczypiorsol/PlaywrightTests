@@ -11,14 +11,16 @@ namespace SwagLabs.Models
         private readonly TextBox _postalCodeTextBox;
         private readonly Button _cancelButton;
         private readonly Button _continueButton;
+        private readonly TextBox _errorMessageTextBox;
 
-        public CheckoutPage(IPage page, int defaultTimeout = 300) : base(page, "[CheckoutPage]", defaultTimeout)
+        public CheckoutPage(IPage page) : base(page, "CheckoutPage")
         {
             _firstNameTextBox = new TextBox(_page, GetBy.Placeholder, "First Name", $"{_pageName}_[FirstNameTextBox]");
             _lastNameTextBox = new TextBox(_page, GetBy.Placeholder, "Last Name", $"{_pageName}_[LastNameTextBox]");
             _postalCodeTextBox = new TextBox(_page, GetBy.Placeholder, "Zip/Postal Code", $"{_pageName}_[PostalCodeTextBox]");
             _cancelButton = new Button(_page, GetBy.Role, "Cancel", $"{_pageName}_[CancelButton]");
             _continueButton = new Button(_page, GetBy.Role, "Continue", $"{_pageName}_[ContinueButton]");
+            _errorMessageTextBox = new TextBox(_page, GetBy.CssSelector, "h3", $"{_pageName}_[ErrorMessageTextBox]");
         }
 
         public override async Task InitAsync()
@@ -50,12 +52,15 @@ namespace SwagLabs.Models
             return checkoutPage;
         }
 
-        public async Task<CheckoutPage> FillCheckoutInformationAsync(string firstName, string lastName, string postalCode)
+        public async Task<CheckoutPage> FillCheckoutInformationAsync(string firstName = "", string lastName = "", string postalCode = "")
         {
             EnsureInitialized();
-            await _firstNameTextBox.EnterTextAsync(firstName);
-            await _lastNameTextBox.EnterTextAsync(lastName);
-            await _postalCodeTextBox.EnterTextAsync(postalCode);
+            if (firstName != "")
+                await _firstNameTextBox.EnterTextAsync(firstName);
+            if (lastName != "")
+                await _lastNameTextBox.EnterTextAsync(lastName);
+            if (postalCode != "")
+                await _postalCodeTextBox.EnterTextAsync(postalCode);
             return await InitAsync(_page);
         }
 
@@ -71,6 +76,22 @@ namespace SwagLabs.Models
                 throw new AssertionException($"[{_pageName}] Failed to click continue button within {_defaultTimeout} miliseconds.", ex);
             }
             return await CheckoutOverviewPage.InitAsync(_page);
+        }
+
+        public async Task ClickContinueAsync(string errorText)
+        {
+            EnsureInitialized();
+            try
+            {
+                await _continueButton.ClickAsync();
+            }
+            catch (TimeoutException ex)
+            {
+                throw new AssertionException($"[{_pageName}] Failed to click continue button within {_defaultTimeout} miliseconds.", ex);
+            }
+
+            await _errorMessageTextBox.CheckIsVisibleAsync();
+            await _errorMessageTextBox.AssertTextAsync(errorText);
         }
 
         public async Task<CartPage> ClickCancelAsync()

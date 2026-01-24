@@ -11,7 +11,7 @@ namespace SwagLabs.Models
         private readonly TextBox _errorMessageTextBox;
         private readonly Button _loginButton;
 
-        public LoginPage(IPage page, int defaultTimeout = 300) : base(page, "[LoginPage]", defaultTimeout)
+        public LoginPage(IPage page) : base(page, "LoginPage")
         {
             _usernameTextBox = new TextBox(_page, GetBy.Role, "Username", $"{_pageName}_[UsernameTextBox]");
             _passwordTextBox = new TextBox(_page, GetBy.Role, "Password", $"{_pageName}_[PasswordTextBox]");

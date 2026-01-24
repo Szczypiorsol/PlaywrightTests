@@ -15,7 +15,7 @@ namespace SwagLabs.Models
         private readonly Button _cancelButton;
         private readonly Button _finishButton;
 
-        public CheckoutOverviewPage(IPage page, int defaultTimeout = 300) : base(page, "[CheckoutOverviewPage]", defaultTimeout)
+        public CheckoutOverviewPage(IPage page) : base(page, "CheckoutOverviewPage")
         {
             _overviewItemList = new ListControl(
                 _page, 

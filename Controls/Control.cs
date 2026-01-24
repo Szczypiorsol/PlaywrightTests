@@ -61,6 +61,15 @@ namespace Controls
             }
         }
 
+        public async Task WaitToBeVisibleAsync(int timeout = 3000)
+        {
+            await _locator.WaitForAsync(new LocatorWaitForOptions
+            {
+                State = WaitForSelectorState.Visible,
+                Timeout = timeout
+            });
+        }
+
         public async Task ClickAsync()
         {
             await _locator.ClickAsync();

@@ -10,7 +10,7 @@ namespace SwagLabs.Models
         private readonly ComboBox _sortComboBox;
         private readonly ListControl _productsList;
 
-        public ProductsPage(IPage page, int defaultTimeout = 300) : base(page, "[ProductsPage]", defaultTimeout)
+        public ProductsPage(IPage page) : base(page, "[ProductsPage]")
         {
             _cartButton = new Button(_page, GetBy.CssSelector, "a.shopping_cart_link", "ProductsPageCartButton");
             _sortComboBox = new ComboBox(
@@ -83,6 +83,20 @@ namespace SwagLabs.Models
             catch (TimeoutException ex)
             {
                 throw new AssertionException($"[{_pageName}] Failed to click on the product button at position {ordinalNumber} within {_defaultTimeout} miliseconds.", ex);
+            }
+            return await InitAsync(_page);
+        }
+
+        public async Task<ProductsPage> RemoveProductByOrdinalNumberAsync(int ordinalNumber)
+        {
+            EnsureInitialized();
+            try
+            {
+                await _productsList.ClickOnItemElementAsync(ordinalNumber, "button");
+            }
+            catch (TimeoutException ex)
+            {
+                throw new AssertionException($"[{_pageName}] Failed to remove the product button at position {ordinalNumber} within {_defaultTimeout} miliseconds.", ex);
             }
             return await InitAsync(_page);
         }

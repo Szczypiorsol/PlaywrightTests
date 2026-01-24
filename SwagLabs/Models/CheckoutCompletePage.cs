@@ -9,7 +9,7 @@ namespace SwagLabs.Models
         private readonly TextBox _thankYouMessageTextBox;
         private readonly Button _backHomeButton;
 
-        public CheckoutCompletePage(IPage page, int defaultTimeout = 300) : base(page, "[CheckoutCompletePage]", defaultTimeout)
+        public CheckoutCompletePage(IPage page) : base(page, "CheckoutCompletePage")
         {
             _thankYouMessageTextBox = new TextBox(_page, GetBy.CssSelector, "h2.complete-header", $"{_pageName}_[ThankYouMessageTextBox]");
             _backHomeButton = new Button(_page, GetBy.Role, "Back Home", $"{_pageName}_[BackHomeButton]");

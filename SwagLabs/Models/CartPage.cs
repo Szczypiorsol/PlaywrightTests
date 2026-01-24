@@ -10,7 +10,7 @@ namespace SwagLabs.Models
         private readonly Button _continueShoppingButton;
         private readonly Button _checkoutButton;
 
-        public CartPage(IPage page, int defaultTimeout = 300) : base(page, "[CartPage]", defaultTimeout)
+        public CartPage(IPage page) : base(page, "CartPage")
         {
             _cartList = new ListControl(
                 page: _page,
