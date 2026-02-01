@@ -255,10 +255,13 @@ namespace SwagLabs
             await Assertions.Expect(cartPage.GetCartItemsLocator()).ToHaveCountAsync(3);
 
             CheckoutPage checkoutPage = await cartPage.ClickCheckoutAsync();
+            checkoutPage = await checkoutPage.ClickContinueErrorExpectedAsync();
             await Assertions.Expect(checkoutPage.ErrorMessageTextBoxLocator).ToHaveTextAsync("Error: First Name is required");
             checkoutPage = await checkoutPage.FillCheckoutInformationAsync(firstName: "John");
+            checkoutPage = await checkoutPage.ClickContinueErrorExpectedAsync();
             await Assertions.Expect(checkoutPage.ErrorMessageTextBoxLocator).ToHaveTextAsync("Error: Last Name is required");
             checkoutPage = await checkoutPage.FillCheckoutInformationAsync(lastName: "Doe");
+            checkoutPage = await checkoutPage.ClickContinueErrorExpectedAsync();
             await Assertions.Expect(checkoutPage.ErrorMessageTextBoxLocator).ToHaveTextAsync("Error: Postal Code is required");
             checkoutPage = await checkoutPage.FillCheckoutInformationAsync(postalCode: "12345");
 
