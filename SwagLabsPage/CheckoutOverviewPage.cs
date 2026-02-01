@@ -78,47 +78,112 @@ namespace SwagLabs.Pages
             return checkoutOverviewPage;
         }
 
-        public async Task AssertOverviewItemsCountAsync(int expectedCount)
+        public ILocator GetOverviewItemListLocator()
         {
-            EnsureInitialized();
-            await _overviewItemList.AssertItemCountAsync(expectedCount);
+            return _overviewItemList.Locator;
         }
 
-        public async Task AssertOverviewItemAtAsync(int index, string expectedName, string expectedPrice)
+        public ILocator GetOverviewItemListItemsLocator()
         {
-            EnsureInitialized();
-            await _overviewItemList.AssertItemElementTextAsync(expectedName, index, GetBy.CssSelector, "div.inventory_item_name", "Name");
-            await _overviewItemList.AssertItemElementTextAsync(expectedPrice, index, GetBy.CssSelector, "div.inventory_item_price", "Price");
+            return _overviewItemList.ListItemLocator;
         }
 
-        public async Task AssertPaymentInformationAsync(string expectedPaymentInformation)
+        public ILocator GetOverviewItemAtLocator(int index)
         {
-            EnsureInitialized();
-            await _paymentInformationTextBox.AssertTextAsync(expectedPaymentInformation);
+            return _overviewItemList.GetItemLocatorByOrdinalNumber(index);
         }
 
-        public async Task AssertShippingInformationAsync(string expectedShippingInformation)
+        public ILocator GetOverviewItemNameAtLocator(int index)
         {
-            EnsureInitialized();
-            await _shippingInformationTextBox.AssertTextAsync(expectedShippingInformation);
+            return _overviewItemList.GetItemElementLocatorAsync(index, GetBy.CssSelector, "div.inventory_item_name");
         }
 
-        public async Task AssertSummarySubtotalAsync(string expectedSummarySubtotal)
+        public ILocator GetOverviewItemPriceAtLocator(int index)
         {
-            EnsureInitialized();
-            await _summarySubtotalTextBox.AssertTextAsync(expectedSummarySubtotal);
+            return _overviewItemList.GetItemElementLocatorAsync(index, GetBy.CssSelector, "div.inventory_item_price");
         }
 
-        public async Task AssertSummaryTaxAsync(string expectedSummaryTax)
+        public ILocator GetPaymentInformationLocator()
         {
-            EnsureInitialized();
-            await _summaryTaxTextBox.AssertTextAsync(expectedSummaryTax);
+            return _paymentInformationTextBox.Locator;
         }
 
-        public async Task AssertSummaryTotalAsync(string expectedSummaryTotal)
+        public ILocator GetShippingInformationLocator()
+        {
+            return _shippingInformationTextBox.Locator;
+        }
+
+        public ILocator GetSummarySubtotalLocator()
+        {
+            return _summarySubtotalTextBox.Locator;
+        }
+
+        public ILocator GetSummaryTaxLocator()
+        {
+            return _summaryTaxTextBox.Locator;
+        }
+
+        public ILocator GetSummaryTotalLocator()
+        {
+            return _summaryTotalTextBox.Locator;
+        }
+
+        public ILocator GetCancelButtonLocator()
+        {
+            return _cancelButton.Locator;
+        }
+
+        public ILocator GetFinishButtonLocator()
+        {
+            return _finishButton.Locator;
+        }
+
+        public async Task<int> GetOverviewItemsCountAsync()
         {
             EnsureInitialized();
-            await _summaryTotalTextBox.AssertTextAsync(expectedSummaryTotal);
+            return await _overviewItemList.GetItemCountAsync();
+        }
+
+        public async Task<string> GetOverviewItemNameAtAsync(int index)
+        {
+            EnsureInitialized();
+            return await _overviewItemList.GetItemElementTextAsync(index, GetBy.CssSelector, "div.inventory_item_name");
+        }
+
+        public async Task<string> GetOverviewItemPriceAtAsync(int index)
+        {
+            EnsureInitialized();
+            return await _overviewItemList.GetItemElementTextAsync(index, GetBy.CssSelector, "div.inventory_item_price");
+        }
+
+        public async Task<string> GetPaymentInformationAsync()
+        {
+            EnsureInitialized();
+            return await _paymentInformationTextBox.GetTextAsync();
+        }
+
+        public async Task<string> GetShippingInformationAsync()
+        {
+            EnsureInitialized();
+            return await _shippingInformationTextBox.GetTextAsync();
+        }
+
+        public async Task<string> GetSummarySubtotalAsync()
+        {
+            EnsureInitialized();
+            return await _summarySubtotalTextBox.GetTextAsync();
+        }
+
+        public async Task<string> GetSummaryTaxAsync()
+        {
+            EnsureInitialized();
+            return await _summaryTaxTextBox.GetTextAsync();
+        }
+
+        public async Task<string> GetSummaryTotalAsync()
+        {
+            EnsureInitialized();
+            return await _summaryTotalTextBox.GetTextAsync();
         }
 
         public async Task<CheckoutPage> ClickCancelAsync()

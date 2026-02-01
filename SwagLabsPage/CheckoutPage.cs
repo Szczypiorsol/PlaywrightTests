@@ -53,6 +53,20 @@ namespace SwagLabs.Pages
             return checkoutPage;
         }
 
+        public ILocator FirstNameTextBoxLocator => _firstNameTextBox.Locator;
+        public ILocator LastNameTextBoxLocator => _lastNameTextBox.Locator;
+        public ILocator PostalCodeTextBoxLocator => _postalCodeTextBox.Locator;
+        public ILocator CancelButtonLocator => _cancelButton.Locator;
+        public ILocator ContinueButtonLocator => _continueButton.Locator;
+        public ILocator ErrorMessageTextBoxLocator => _errorMessageTextBox.Locator;
+
+        public async Task<string> GetErrorMessageAsync()
+        {
+            EnsureInitialized();
+            await _errorMessageTextBox.CheckIsVisibleAsync();
+            return await _errorMessageTextBox.GetTextAsync();
+        }
+
         public async Task<CheckoutPage> FillCheckoutInformationAsync(string firstName = "", string lastName = "", string postalCode = "")
         {
             EnsureInitialized();
@@ -79,7 +93,7 @@ namespace SwagLabs.Pages
             return await CheckoutOverviewPage.InitAsync(_page);
         }
 
-        public async Task ClickContinueAsync(string errorText)
+        public async Task<CheckoutPage> ClickContinueErrorExpectedAsync()
         {
             EnsureInitialized();
             try
@@ -90,9 +104,7 @@ namespace SwagLabs.Pages
             {
                 throw new AssertionException($"[{_pageName}] Failed to click continue button within {_defaultTimeout} miliseconds.", ex);
             }
-
-            await _errorMessageTextBox.CheckIsVisibleAsync();
-            await _errorMessageTextBox.AssertTextAsync(errorText);
+            return await InitAsync(_page);
         }
 
         public async Task<CartPage> ClickCancelAsync()

@@ -53,23 +53,57 @@ namespace SwagLabs.Pages
             return cartPage;
         }
 
-        public async Task AssertCartItemsCountAsync(int expectedCount)
+        public ILocator GetCartListLocator()
         {
-            EnsureInitialized();
-            await _cartList.AssertItemCountAsync(expectedCount);
+            return _cartList.Locator;
         }
 
-        public async Task AssertCartItemAsync(int ordinalNumber, string expecterCartItemName, string expecterCartItemPrice)
+        public ILocator GetCartItemsLocator()
+        {
+            return _cartList.ListItemLocator;
+        }
+
+        public ILocator GetCartItemLocatorByOrdinalNumber(int ordinalNumber)
+        {
+            return _cartList.GetItemLocatorByOrdinalNumber(ordinalNumber);
+        }
+
+        public ILocator GetCartItemNameLocatorByOrdinalNumber(int ordinalNumber)
+        {
+            return _cartList.GetItemElementLocatorAsync(ordinalNumber, GetBy.CssSelector, "div.inventory_item_name");
+        }
+
+        public ILocator GetContinueShoppingButtonLocator()
+        {
+            return _continueShoppingButton.Locator;
+        }
+
+        public ILocator GetCheckoutButtonLocator()
+        {
+            return _checkoutButton.Locator;
+        }
+
+        public ILocator GetCartItemPriceLocatorByOrdinalNumber(int ordinalNumber)
+        {
+            return _cartList.GetItemElementLocatorAsync(ordinalNumber, GetBy.CssSelector, "div.inventory_item_price");
+        }
+
+        public async Task<int> GetCartItemsCountAsync()
         {
             EnsureInitialized();
-            await _cartList.AssertItemElementTextAsync(expecterCartItemName, ordinalNumber, GetBy.CssSelector, "div.inventory_item_name", "Name");
-            await _cartList.AssertItemElementTextAsync(
-                expecterCartItemPrice, 
-                ordinalNumber, 
-                GetBy.CssSelector, 
-                "div.inventory_item_price", 
-                "Price"
-                );
+            return await _cartList.GetItemCountAsync();
+        }
+
+        public async Task<string> GetCartItemNameAsync(int ordinalNumber)
+        {
+            EnsureInitialized();
+            return await _cartList.GetItemElementTextAsync(ordinalNumber, GetBy.CssSelector, "div.inventory_item_name");
+        }
+
+        public async Task<string> GetCartItemPriceAsync(int ordinalNumber)
+        {
+            EnsureInitialized();
+            return await _cartList.GetItemElementTextAsync(ordinalNumber, GetBy.CssSelector, "div.inventory_item_price");
         }
 
         public async Task<CartPage> RemoveCartItemAsync(int ordinalNumber)

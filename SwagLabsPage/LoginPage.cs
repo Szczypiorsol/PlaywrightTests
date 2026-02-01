@@ -47,11 +47,31 @@ namespace SwagLabs.Pages
             return loginPage;
         }
 
-        public async Task AssertErrorMessageAsync(string expectedText)
+        public ILocator GetUsernameTextBoxLocator()
+        {
+            return _usernameTextBox.Locator;
+        }
+
+        public ILocator GetPasswordTextBoxLocator()
+        {
+            return _passwordTextBox.Locator;
+        }
+
+        public ILocator GetLoginButtonLocator()
+        {
+            return _loginButton.Locator;
+        }
+
+        public ILocator GetErrorMessageTextBoxLocator()
+        {
+            return _errorMessageTextBox.Locator;
+        }
+
+        public async Task<string> GetErrorMessageAsync()
         {
             EnsureInitialized();
             await _errorMessageTextBox.CheckIsVisibleAsync();
-            await _errorMessageTextBox.AssertTextAsync(expectedText);
+            return await _errorMessageTextBox.GetTextAsync();
         }
 
         public async Task<ProductsPage> LoginAsync(string username, string password)

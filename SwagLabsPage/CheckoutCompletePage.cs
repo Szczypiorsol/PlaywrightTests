@@ -42,10 +42,20 @@ namespace SwagLabs.Pages
             return checkoutCompletePage;
         }
 
-        public async Task AssertThankYouMessageAsync(string expectedText)
+        public ILocator GetThankYouMessageLocator()
+        {
+            return _thankYouMessageTextBox.Locator;
+        }
+
+        public ILocator GetBackHomeButtonLocator()
+        {
+            return _backHomeButton.Locator;
+        }
+
+        public async Task<string> GetThankYouMessageAsync()
         {
             EnsureInitialized();
-            await _thankYouMessageTextBox.AssertTextAsync(expectedText);
+            return await _thankYouMessageTextBox.GetTextAsync();
         }
 
         public async Task<ProductsPage> ClickBackHomeAsync()

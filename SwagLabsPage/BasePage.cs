@@ -26,6 +26,16 @@ namespace SwagLabs.Pages
 
         public abstract Task InitAsync();
 
+        public ILocator GetBurgerButtonLocator()
+        {
+            return _burgerButton.Locator;
+        }
+
+        public ILocator GetLogoutButtonLocator()
+        {
+            return _logoutButton.Locator;
+        }
+
         protected void EnsureInitialized()
         {
             if (!_isInitialized)

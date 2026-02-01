@@ -18,6 +18,8 @@ namespace Controls
         protected readonly string _name;
         protected readonly string _description;
 
+        public ILocator Locator => _locator;
+
         public Control(ILocator locator, string name, string description)
         {
             if (locator is null)
