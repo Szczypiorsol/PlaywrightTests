@@ -10,9 +10,9 @@ namespace Controls
         public ILocator ItemsLocator => _itemsLocator;
 
         public ListControl(IPage page, GetBy getByList, string listName, GetBy getByItem, string itemName) 
-            : base(GetLocator(page, getByList, AriaRole.List, listName))
+            : base(GetLocator(page, getByList, listName, AriaRole.List))
         {
-            ILocator listItemLocator = GetLocator(page, getByItem, AriaRole.Listitem, itemName);
+            ILocator listItemLocator = GetLocator(page, getByItem, itemName, AriaRole.Listitem);
 
             _itemsLocator = listItemLocator ?? throw new ArgumentException("ListItemLocator cannot be null.");
 
@@ -21,7 +21,7 @@ namespace Controls
 
         public ILocator GetItemElementLocator(int ordinalNumber, GetBy getBy, string name)
         {
-            return ItemsLocator.Nth(ordinalNumber).Locator(GetLocator(_page, getBy, AriaRole.None, name));
+            return ItemsLocator.Nth(ordinalNumber).Locator(GetLocator(_page, getBy, name));
         }
 
         public async Task ClickOnItemElementAsync(int ordinalNumber, string name)

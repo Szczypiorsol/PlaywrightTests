@@ -51,11 +51,11 @@ namespace SwagLabs.Pages
         public async Task<CheckoutPage> FillCheckoutInformationAsync(string firstName = "", string lastName = "", string postalCode = "")
         {
             EnsureInitialized();
-            if (firstName != "")
+            if (!string.IsNullOrWhiteSpace(firstName))
                 await FirstNameTextBox.EnterTextAsync(firstName);
-            if (lastName != "")
+            if (!string.IsNullOrWhiteSpace(lastName))
                 await LastNameTextBox.EnterTextAsync(lastName);
-            if (postalCode != "")
+            if (!string.IsNullOrWhiteSpace(postalCode))
                 await PostalCodeTextBox.EnterTextAsync(postalCode);
             return await InitAsync(_page);
         }

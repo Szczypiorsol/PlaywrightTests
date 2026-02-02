@@ -27,8 +27,18 @@ namespace Controls
             _locator = locator;
         }
 
-        public static ILocator GetLocator(IPage page, GetBy getBy, AriaRole ariaRole, string name)
+        public static ILocator GetLocator(IPage page, GetBy getBy, string name, AriaRole ariaRole = AriaRole.None)
         {
+            if (page is null)
+            {
+                throw new ArgumentNullException(nameof(page), "Page cannot be null.");
+            }
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Name cannot be null or whitespace.", nameof(name));
+            }
+
             return getBy switch
             {
                 GetBy.Role => page.GetByRole(ariaRole, new PageGetByRoleOptions { Name = name }),

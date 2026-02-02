@@ -2,7 +2,7 @@
 
 namespace Controls
 {
-    public class Button(IPage page, Control.GetBy getBy, string name) : Control(GetLocator(page, getBy, AriaRole.Button, name))
+    public class Button(IPage page, Control.GetBy getBy, string name) : Control(GetLocator(page, getBy, name, AriaRole.Button))
     {
     }
 }

@@ -42,7 +42,7 @@ namespace SwagLabs.Pages
 
         public ILocator GetProductNameLocator(int ordinalNumber)
         {
-            return ProductsListControl.GetItemElementLocator(ordinalNumber, GetBy.CssSelector, "div.inventory_item_name ");
+            return ProductsListControl.GetItemElementLocator(ordinalNumber, GetBy.CssSelector, "div.inventory_item_name");
         }
 
         public ILocator GetProductPriceLocator(int ordinalNumber)

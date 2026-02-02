@@ -2,7 +2,7 @@
 
 namespace Controls
 {
-    public class TextBox(IPage page, Control.GetBy getBy, string name) : Control(GetLocator(page, getBy, AriaRole.Textbox, name))
+    public class TextBox(IPage page, Control.GetBy getBy, string name) : Control(GetLocator(page, getBy, name, AriaRole.Textbox))
     {
         public async Task EnterTextAsync(string text)
         {

@@ -9,9 +9,9 @@ namespace Controls
         public ILocator ItemsLocator => _itemsLocator;
 
         public ComboBox(IPage page, GetBy getByList, string comboBoxName, GetBy getByItem, string itemName) 
-            : base(GetLocator(page, getByList, AriaRole.List, comboBoxName))
+            : base(GetLocator(page, getByList, comboBoxName, AriaRole.List))
         {
-            ILocator comboBoxItemLocator = GetLocator(page, getByItem, AriaRole.Listitem, itemName);
+            ILocator comboBoxItemLocator = GetLocator(page, getByItem, itemName, AriaRole.Listitem);
             
             _itemsLocator = comboBoxItemLocator ?? throw new ArgumentException("ComboBoxItemLocator cannot be null.");
         }
