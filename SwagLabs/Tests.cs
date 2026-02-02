@@ -10,8 +10,7 @@ namespace SwagLabs
         [Test]
         public async Task T001_When_UserIsLockedOut_Should_DisplayErrorMessage()
         {
-            await PageInstance.GotoAsync("https://www.saucedemo.com/");
-            LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
+            LoginPage loginPage = await NavigateToLoginPageAsync();
 
             loginPage = await loginPage.LoginWithInvalidCredentialsAsync(Users["LockedOutUser"], "secret_sauce");
             await Assertions.Expect(loginPage.ErrorMessageTextBox.Locator)
@@ -21,8 +20,7 @@ namespace SwagLabs
         [Test]
         public async Task T002_When_UserEntersWrongPassword_Should_DisplayInvalidCredentialsMessage()
         {
-            await PageInstance.GotoAsync("https://www.saucedemo.com/");
-            LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
+            LoginPage loginPage = await NavigateToLoginPageAsync();
 
             loginPage = await loginPage.LoginWithInvalidCredentialsAsync(UserLogin, "wrong_password");
             await Assertions.Expect(loginPage.ErrorMessageTextBox.Locator)
@@ -32,8 +30,7 @@ namespace SwagLabs
         [Test]
         public async Task T003_When_UserEntersWrongLogin_Should_DisplayInvalidCredentialsMessage()
         {
-            await PageInstance.GotoAsync("https://www.saucedemo.com/");
-            LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
+            LoginPage loginPage = await NavigateToLoginPageAsync();
 
             loginPage = await loginPage.LoginWithInvalidCredentialsAsync("admin_user", "secret_sauce");
             await Assertions.Expect(loginPage.ErrorMessageTextBox.Locator)
@@ -43,8 +40,7 @@ namespace SwagLabs
         [Test]
         public async Task T004_When_SingleProductIsBought_Should_ValidateDetailsAndConfirmOrder()
         {
-            await PageInstance.GotoAsync("https://www.saucedemo.com/");
-            LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
+            LoginPage loginPage = await NavigateToLoginPageAsync();
 
             ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
             productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(1);
@@ -75,8 +71,7 @@ namespace SwagLabs
         [Test]
         public async Task T005_When_UserSortsProductsByNameAndPrice_Should_DisplayCorrectOrder()
         {
-            await PageInstance.GotoAsync("https://www.saucedemo.com/");
-            LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
+            LoginPage loginPage = await NavigateToLoginPageAsync();
 
             ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
             await Assertions.Expect(productsPage.ProductsListControl.ItemsLocator).ToHaveCountAsync(6);
@@ -141,8 +136,7 @@ namespace SwagLabs
         [Test]
         public async Task T006_When_SixProductsAreOrdered_Should_ValidateTotalsAndConfirmOrder()
         {
-            await PageInstance.GotoAsync("https://www.saucedemo.com/");
-            LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
+            LoginPage loginPage = await NavigateToLoginPageAsync();
 
             ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
             await Assertions.Expect(productsPage.ProductsListControl.ItemsLocator).ToHaveCountAsync(6);
@@ -173,8 +167,7 @@ namespace SwagLabs
         [Test]
         public async Task T007_When_ItemIsDeletedFromCartOnProductPage_Should_ReflectCorrectTotalsAndConfirmOrder()
         {
-            await PageInstance.GotoAsync("https://www.saucedemo.com/");
-            LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
+            LoginPage loginPage = await NavigateToLoginPageAsync();
 
             ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
             productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(0);
@@ -208,8 +201,7 @@ namespace SwagLabs
         [Test]
         public async Task T008_When_ItemIsDeletedFromCartOnCartPage_Should_ReflectCorrectTotalsAndConfirmOrder()
         {
-            await PageInstance.GotoAsync("https://www.saucedemo.com/");
-            LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
+            LoginPage loginPage = await NavigateToLoginPageAsync();
 
             ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
             productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(1);
@@ -243,8 +235,7 @@ namespace SwagLabs
         [Test]
         public async Task T009_When_CheckoutFormIsIncomplete_Should_DisplayValidationErrors()
         {
-            await PageInstance.GotoAsync("https://www.saucedemo.com/");
-            LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
+            LoginPage loginPage = await NavigateToLoginPageAsync();
 
             ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
             productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(0);
@@ -287,8 +278,7 @@ namespace SwagLabs
         [Test]
         public async Task T10_When_SameUserReauthentication_Should_PreserveCartContentsAndConfirmOrder()
         {
-            await PageInstance.GotoAsync("https://www.saucedemo.com/");
-            LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
+            LoginPage loginPage = await NavigateToLoginPageAsync();
 
             ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
             productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(1);
@@ -330,8 +320,7 @@ namespace SwagLabs
         [Test]
         public async Task T11_When_DifferentUserReauthentication_Should_NotRetainPreviousCart()
         {
-            await PageInstance.GotoAsync("https://www.saucedemo.com/");
-            LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
+            LoginPage loginPage = await NavigateToLoginPageAsync();
 
             ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
             productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(1);
@@ -371,8 +360,7 @@ namespace SwagLabs
         [Test]
         public async Task T12_When_PageIsRefreshed_CartShouldRemainUnchanged()
         {
-            await PageInstance.GotoAsync("https://www.saucedemo.com/");
-            LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
+            LoginPage loginPage = await NavigateToLoginPageAsync();
 
             ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
             productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(0);
@@ -385,8 +373,7 @@ namespace SwagLabs
         [Test]
         public async Task T13_When_UnauthenticatedUserAccessesCheckout_ShouldBeRedirectedToLogin()
         {
-            await PageInstance.GotoAsync("https://www.saucedemo.com/checkout-step-two.html");
-            LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
+            LoginPage loginPage = await NavigateToLoginPageAsync();
             await Assertions.Expect(loginPage.ErrorMessageTextBox.Locator)
                 .ToHaveTextAsync("Epic sadface: You can only access '/checkout-step-two.html' when you are logged in.");
         }
@@ -394,8 +381,7 @@ namespace SwagLabs
         [Test]
         public async Task T14_When_MultipleUsersPerformActions_Should_IsolateSessionsCorrectly()
         {
-            await PageInstance.GotoAsync("https://www.saucedemo.com/");
-            LoginPage loginPage = await LoginPage.InitAsync(PageInstance);
+            LoginPage loginPage = await NavigateToLoginPageAsync();
 
             IBrowserContext BrowserContext2 = await Browser.NewContextAsync();
             IPage pageInstance2 = await BrowserContext2.NewPageAsync();

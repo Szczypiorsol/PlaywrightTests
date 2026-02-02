@@ -1,4 +1,5 @@
 ﻿using Microsoft.Playwright;
+using SwagLabs.Pages;
 using System.Diagnostics;
 
 namespace SwagLabs
@@ -20,6 +21,12 @@ namespace SwagLabs
         protected IBrowserContext? BrowserContext;
         protected IPage? PageInstance;
         protected string UserLogin;
+
+        protected async Task<LoginPage> NavigateToLoginPageAsync()
+        {
+            await PageInstance.GotoAsync("https://www.saucedemo.com/");
+            return await LoginPage.InitAsync(PageInstance);
+        }
 
         [OneTimeSetUp]
         public async Task OneTimeSetupAsync()
