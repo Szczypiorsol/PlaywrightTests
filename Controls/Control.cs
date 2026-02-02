@@ -1,5 +1,4 @@
 ﻿using Microsoft.Playwright;
-using NUnit.Framework;
 
 namespace Controls
 {
@@ -14,27 +13,18 @@ namespace Controls
             Placeholder
         }
 
-        protected readonly ILocator _locator;
-        protected readonly string _name;
-        protected readonly string _description;
+        private readonly ILocator _locator;
 
         public ILocator Locator => _locator;
 
-        public Control(ILocator locator, string name, string description)
+        public Control(ILocator locator)
         {
             if (locator is null)
             {
                 throw new ArgumentNullException(nameof(locator), "Locator cannot be null.");
             }
 
-            if (string.IsNullOrEmpty(description))
-            {
-                throw new ArgumentException("Description cannot be null or empty.", nameof(description));
-            }
-
             _locator = locator;
-            _name = name;
-            _description = description;
         }
 
         public static ILocator GetLocator(IPage page, GetBy getBy, AriaRole ariaRole, string name)
@@ -48,19 +38,6 @@ namespace Controls
                 GetBy.Placeholder => page.GetByPlaceholder(name),
                 _ => throw new Exception("GetBy method not recognized."),
             };
-        }
-
-        public async Task CheckIsVisibleAsync()
-        {
-            try
-            {
-                await Assertions.Expect(_locator).ToBeVisibleAsync();
-            }
-            catch (PlaywrightException ex)
-            {
-                string TypeName = this.GetType().Name;
-                throw new AssertionException($"{TypeName} {_description} is not visible.", ex);
-            }
         }
 
         public async Task WaitToBeVisibleAsync(int timeout = 3000)

@@ -1,19 +1,17 @@
 ﻿using Microsoft.Playwright;
-using NUnit.Framework;
 
 namespace Controls
 {
-    public class TextBox(IPage page, Control.GetBy getBy, string name, string description) 
-        : Control(GetLocator(page, getBy, AriaRole.Textbox, name), name, description)
+    public class TextBox(IPage page, Control.GetBy getBy, string name) : Control(GetLocator(page, getBy, AriaRole.Textbox, name))
     {
         public async Task EnterTextAsync(string text)
         {
-            await _locator.FillAsync(text);
+            await Locator.FillAsync(text);
         }
 
         public async Task<string> GetTextAsync()
         {
-            return await _locator.InnerTextAsync();
+            return await Locator.InnerTextAsync();
         }
     }
 }

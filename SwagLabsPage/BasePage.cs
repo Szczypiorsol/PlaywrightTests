@@ -10,8 +10,12 @@ namespace SwagLabs.Pages
         protected bool _isInitialized = false;
         protected readonly string _pageName;
         protected readonly int _defaultTimeout;
-        protected readonly Button _burgerButton;
-        protected readonly Button _logoutButton;
+
+        private readonly Button _burgerButton;
+        private readonly Button _logoutButton;
+
+        public Button BurgerButton => _burgerButton;
+        public Button LogoutButton => _logoutButton;
 
         public BasePage(IPage page, string pageName, int defaultTimeout = 1000)
         {
@@ -20,21 +24,11 @@ namespace SwagLabs.Pages
             _defaultTimeout = defaultTimeout;
             _page.SetDefaultTimeout(_defaultTimeout);
 
-            _burgerButton = new Button(_page, GetBy.CssSelector, "div.bm-burger-button", $"{_pageName}_[BurgerButton]");
-            _logoutButton = new Button(_page, GetBy.TestId, "logout-sidebar-link", $"{_pageName}_[LogoutButton]");
+            _burgerButton = new Button(_page, GetBy.CssSelector, "div.bm-burger-button");
+            _logoutButton = new Button(_page, GetBy.TestId, "logout-sidebar-link");
         }
 
         public abstract Task InitAsync();
-
-        public ILocator GetBurgerButtonLocator()
-        {
-            return _burgerButton.Locator;
-        }
-
-        public ILocator GetLogoutButtonLocator()
-        {
-            return _logoutButton.Locator;
-        }
 
         protected void EnsureInitialized()
         {
@@ -57,10 +51,8 @@ namespace SwagLabs.Pages
                 throw new InvalidOperationException("You are already on the Login Page.");
             }
 
-            await _burgerButton.CheckIsVisibleAsync();
-            await _burgerButton.ClickAsync();
-            await _logoutButton.CheckIsVisibleAsync();
-            await _logoutButton.ClickAsync();
+            await BurgerButton.ClickAsync();
+            await LogoutButton.ClickAsync();
             return await LoginPage.InitAsync(_page);
         }
     }

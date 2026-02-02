@@ -1,6 +1,5 @@
 ﻿using Controls;
 using Microsoft.Playwright;
-using NUnit.Framework;
 using static Controls.Control;
 
 namespace SwagLabs.Pages
@@ -10,27 +9,19 @@ namespace SwagLabs.Pages
         private readonly TextBox _thankYouMessageTextBox;
         private readonly Button _backHomeButton;
 
+        public TextBox ThankYouMessageTextBox => _thankYouMessageTextBox;
+        public Button BackHomeButton => _backHomeButton;
+
         public CheckoutCompletePage(IPage page) : base(page, "CheckoutCompletePage")
         {
-            _thankYouMessageTextBox = new TextBox(_page, GetBy.CssSelector, "h2.complete-header", $"{_pageName}_[ThankYouMessageTextBox]");
-            _backHomeButton = new Button(_page, GetBy.Role, "Back Home", $"{_pageName}_[BackHomeButton]");
+            _thankYouMessageTextBox = new TextBox(_page, GetBy.CssSelector, "h2.complete-header");
+            _backHomeButton = new Button(_page, GetBy.Role, "Back Home");
         }
 
         public override async Task InitAsync()
         {
-            try
-            {
-                await _thankYouMessageTextBox.CheckIsVisibleAsync();
-                await _backHomeButton.CheckIsVisibleAsync();
-            }
-            catch (Exception ex) when (ex is AssertionException || ex is PlaywrightException)
-            {
-                throw new AssertionException($"{_pageName} did not load correctly.", ex);
-            }
-            catch (TimeoutException ex)
-            {
-                throw new AssertionException($"{_pageName} did not load within {_defaultTimeout} miliseconds.", ex);
-            }
+            await ThankYouMessageTextBox.WaitToBeVisibleAsync();
+            await BackHomeButton.WaitToBeVisibleAsync();
 
             _isInitialized = true;
         }
@@ -42,33 +33,10 @@ namespace SwagLabs.Pages
             return checkoutCompletePage;
         }
 
-        public ILocator GetThankYouMessageLocator()
-        {
-            return _thankYouMessageTextBox.Locator;
-        }
-
-        public ILocator GetBackHomeButtonLocator()
-        {
-            return _backHomeButton.Locator;
-        }
-
-        public async Task<string> GetThankYouMessageAsync()
-        {
-            EnsureInitialized();
-            return await _thankYouMessageTextBox.GetTextAsync();
-        }
-
         public async Task<ProductsPage> ClickBackHomeAsync()
         {
             EnsureInitialized();
-            try
-            {
-                await _backHomeButton.ClickAsync();
-            }
-            catch (TimeoutException ex)
-            {
-                throw new AssertionException($"[{_pageName}] Failed to click back home button within {_defaultTimeout} miliseconds.", ex);
-            }
+            await BackHomeButton.ClickAsync();
             return await ProductsPage.InitAsync(_page);
         }
     }

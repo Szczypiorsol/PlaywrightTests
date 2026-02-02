@@ -1,47 +1,37 @@
 ﻿using Controls;
 using Microsoft.Playwright;
-using NUnit.Framework;
 using static Controls.Control;
 
 namespace SwagLabs.Pages
 {
     public class CartPage : BasePage
     {
-        private readonly ListControl _cartList;
+        private readonly ListControl _productsListControl;
         private readonly Button _continueShoppingButton;
         private readonly Button _checkoutButton;
 
+        public ListControl ProductsListControl => _productsListControl;
+        public Button ContinueShoppingButton => _continueShoppingButton;
+        public Button CheckoutButton => _checkoutButton;
+
         public CartPage(IPage page) : base(page, "CartPage")
         {
-            _cartList = new ListControl(
+            _productsListControl = new ListControl(
                 page: _page,
                 getByList: GetBy.CssSelector,
                 listName: "div.cart_list",
-                listDescription: $"{_pageName}_[ProductsList]",
                 getByItem: GetBy.CssSelector,
-                itemName: "div.cart_item",
-                listItemDescription: $"{_pageName}_[Product]"
+                itemName: "div.cart_item"
                 );
-            _continueShoppingButton = new Button(_page, GetBy.Role, "Continue Shopping", $"{_pageName}_[ContinueShoppingButton]");
-            _checkoutButton = new Button(_page, GetBy.Role, "Checkout", $"{_pageName}_[CheckoutButton]");
+            _continueShoppingButton = new Button(_page, GetBy.Role, "Continue Shopping");
+            _checkoutButton = new Button(_page, GetBy.Role, "Checkout");
         }
 
         public override async Task InitAsync()
         {
-            try
-            {
-                await _cartList.CheckIsVisibleAsync();
-                await _continueShoppingButton.CheckIsVisibleAsync();
-                await _checkoutButton.CheckIsVisibleAsync();
-            }
-            catch (Exception ex) when (ex is AssertionException || ex is PlaywrightException)
-            {
-                throw new AssertionException($"{_pageName} did not load correctly.", ex);
-            }
-            catch (TimeoutException ex)
-            {
-                throw new AssertionException($"{_pageName} did not load within {_defaultTimeout} miliseconds.", ex);
-            }
+            await ProductsListControl.WaitToBeVisibleAsync();
+            await ContinueShoppingButton.WaitToBeVisibleAsync();
+            await CheckoutButton.WaitToBeVisibleAsync();
 
             _isInitialized = true;
         }
@@ -53,98 +43,34 @@ namespace SwagLabs.Pages
             return cartPage;
         }
 
-        public ILocator GetCartListLocator()
+        public ILocator GetProductNameLocator(int ordinalNumber)
         {
-            return _cartList.Locator;
+            return ProductsListControl.GetItemElementLocator(ordinalNumber, GetBy.CssSelector, "div.inventory_item_name");
         }
 
-        public ILocator GetCartItemsLocator()
+        public ILocator GetProductPriceLocator(int ordinalNumber)
         {
-            return _cartList.ListItemLocator;
-        }
-
-        public ILocator GetCartItemLocatorByOrdinalNumber(int ordinalNumber)
-        {
-            return _cartList.GetItemLocatorByOrdinalNumber(ordinalNumber);
-        }
-
-        public ILocator GetCartItemNameLocatorByOrdinalNumber(int ordinalNumber)
-        {
-            return _cartList.GetItemElementLocatorAsync(ordinalNumber, GetBy.CssSelector, "div.inventory_item_name");
-        }
-
-        public ILocator GetContinueShoppingButtonLocator()
-        {
-            return _continueShoppingButton.Locator;
-        }
-
-        public ILocator GetCheckoutButtonLocator()
-        {
-            return _checkoutButton.Locator;
-        }
-
-        public ILocator GetCartItemPriceLocatorByOrdinalNumber(int ordinalNumber)
-        {
-            return _cartList.GetItemElementLocatorAsync(ordinalNumber, GetBy.CssSelector, "div.inventory_item_price");
-        }
-
-        public async Task<int> GetCartItemsCountAsync()
-        {
-            EnsureInitialized();
-            return await _cartList.GetItemCountAsync();
-        }
-
-        public async Task<string> GetCartItemNameAsync(int ordinalNumber)
-        {
-            EnsureInitialized();
-            return await _cartList.GetItemElementTextAsync(ordinalNumber, GetBy.CssSelector, "div.inventory_item_name");
-        }
-
-        public async Task<string> GetCartItemPriceAsync(int ordinalNumber)
-        {
-            EnsureInitialized();
-            return await _cartList.GetItemElementTextAsync(ordinalNumber, GetBy.CssSelector, "div.inventory_item_price");
+            return ProductsListControl.GetItemElementLocator(ordinalNumber, GetBy.CssSelector, "div.inventory_item_price");
         }
 
         public async Task<CartPage> RemoveCartItemAsync(int ordinalNumber)
         {
             EnsureInitialized();
-            try
-            {
-                await _cartList.ClickOnItemElementAsync(ordinalNumber, "button");
-            }
-            catch (TimeoutException ex)
-            {
-                throw new AssertionException($"[{_pageName}] Failed to remove cart item at ordinal number {ordinalNumber} within {_defaultTimeout} miliseconds.", ex);
-            }
+            await ProductsListControl.ClickOnItemElementAsync(ordinalNumber, "button");
             return await InitAsync(_page);
         }
 
         public async Task<ProductsPage> ClickContinueShoppingAsync()
         {
             EnsureInitialized();
-            try
-            {
-                await _continueShoppingButton.ClickAsync();
-            }
-            catch (TimeoutException ex)
-            {
-                throw new AssertionException($"[{_pageName}] Failed to click Continue Shopping button within {_defaultTimeout} miliseconds.", ex);
-            }
+            await ContinueShoppingButton.ClickAsync();
             return await ProductsPage.InitAsync(_page);
         }
 
         public async Task<CheckoutPage> ClickCheckoutAsync()
         {
             EnsureInitialized();
-            try
-            {
-                await _checkoutButton.ClickAsync();
-            }
-            catch (TimeoutException ex)
-            {
-                throw new AssertionException($"[{_pageName}] Failed to click Checkout button within {_defaultTimeout} miliseconds.", ex);
-            }
+            await CheckoutButton.ClickAsync();
             return await CheckoutPage.InitAsync(_page);
         }
     }
