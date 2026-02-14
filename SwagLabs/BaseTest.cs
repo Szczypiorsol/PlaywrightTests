@@ -2,9 +2,9 @@
 using Serilog;
 using SwagLabs.Pages;
 using System.Diagnostics;
-using Serilog.Core;
+using Microsoft.Extensions.Configuration;
 
-namespace SwagLabs
+namespace SwagLabs.PlaywrightTests
 {
     public class BaseTest
     {
@@ -18,6 +18,7 @@ namespace SwagLabs
             ["VisualUser"] = "visual_user",
         };
 
+        private static IConfiguration _configuration;
         protected IPlaywright? PlaywrightInstance;
         protected IBrowser? Browser;
         protected IBrowserContext? BrowserContext;
@@ -34,6 +35,12 @@ namespace SwagLabs
         [OneTimeSetUp]
         public async Task OneTimeSetupAsync()
         {
+            //_configuration = new ConfigurationBuilder()
+            //    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            //    .AddEnvironmentVariables()
+            //    .AddUserSecrets<BaseTest>(optional: true)
+            //    .Build();
+
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
@@ -45,7 +52,7 @@ namespace SwagLabs
             Logger = Log.Logger;
             Logger.Information("=== Test Suite Started ===");
 
-            PlaywrightInstance = await Playwright.CreateAsync();
+              PlaywrightInstance = await Playwright.CreateAsync();
             Browser = await PlaywrightInstance.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = !Debugger.IsAttached });
 
             UserLogin = Users["StandardUser"];

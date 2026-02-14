@@ -1,13 +1,14 @@
 ﻿using Microsoft.Playwright;
 using SwagLabs.Pages;
 
-namespace SwagLabs
+namespace SwagLabs.PlaywrightTests
 {
     [Parallelizable(ParallelScope.Self)]
     [TestFixture]
     public class Tests : BaseTest
     {
         [Test]
+        [Category("Login")]
         public async Task T001_When_UserIsLockedOut_Should_DisplayErrorMessage()
         {
             LoginPage loginPage = await NavigateToLoginPageAsync();
@@ -18,6 +19,7 @@ namespace SwagLabs
         }
 
         [Test]
+        [Category("Login")]
         public async Task T002_When_UserEntersWrongPassword_Should_DisplayInvalidCredentialsMessage()
         {
             LoginPage loginPage = await NavigateToLoginPageAsync();
@@ -28,6 +30,7 @@ namespace SwagLabs
         }
 
         [Test]
+        [Category("Login")]
         public async Task T003_When_UserEntersWrongLogin_Should_DisplayInvalidCredentialsMessage()
         {
             LoginPage loginPage = await NavigateToLoginPageAsync();
@@ -38,6 +41,7 @@ namespace SwagLabs
         }
 
         [Test]
+        [Category("Checkout")]
         public async Task T004_When_SingleProductIsBought_Should_ValidateDetailsAndConfirmOrder()
         {
             LoginPage loginPage = await NavigateToLoginPageAsync();
@@ -69,6 +73,7 @@ namespace SwagLabs
         }
 
         [Test]
+        [Category("Products")]
         public async Task T005_When_UserSortsProductsByNameAndPrice_Should_DisplayCorrectOrder()
         {
             LoginPage loginPage = await NavigateToLoginPageAsync();
@@ -134,6 +139,7 @@ namespace SwagLabs
         }
 
         [Test]
+        [Category("Checkout")]
         public async Task T006_When_SixProductsAreOrdered_Should_ValidateTotalsAndConfirmOrder()
         {
             LoginPage loginPage = await NavigateToLoginPageAsync();
@@ -165,6 +171,7 @@ namespace SwagLabs
         }
 
         [Test]
+        [Category("Checkout")]
         public async Task T007_When_ItemIsDeletedFromCartOnProductPage_Should_ReflectCorrectTotalsAndConfirmOrder()
         {
             LoginPage loginPage = await NavigateToLoginPageAsync();
@@ -199,6 +206,7 @@ namespace SwagLabs
         }
 
         [Test]
+        [Category("Checkout")]
         public async Task T008_When_ItemIsDeletedFromCartOnCartPage_Should_ReflectCorrectTotalsAndConfirmOrder()
         {
             LoginPage loginPage = await NavigateToLoginPageAsync();
@@ -233,6 +241,7 @@ namespace SwagLabs
         }
 
         [Test]
+        [Category("Checkout")]
         public async Task T009_When_CheckoutFormIsIncomplete_Should_DisplayValidationErrors()
         {
             LoginPage loginPage = await NavigateToLoginPageAsync();
@@ -276,6 +285,7 @@ namespace SwagLabs
         }
 
         [Test]
+        [Category("Checkout")]
         public async Task T10_When_SameUserReauthentication_Should_PreserveCartContentsAndConfirmOrder()
         {
             LoginPage loginPage = await NavigateToLoginPageAsync();
@@ -318,6 +328,7 @@ namespace SwagLabs
         }
 
         [Test]
+        [Category("Checkout")]
         public async Task T11_When_DifferentUserReauthentication_Should_NotRetainPreviousCart()
         {
             LoginPage loginPage = await NavigateToLoginPageAsync();
@@ -358,6 +369,7 @@ namespace SwagLabs
         }
 
         [Test]
+        [Category("Checkout")]
         public async Task T12_When_PageIsRefreshed_CartShouldRemainUnchanged()
         {
             LoginPage loginPage = await NavigateToLoginPageAsync();
@@ -371,6 +383,7 @@ namespace SwagLabs
         }
 
         [Test]
+        [Category("Checkout")]
         public async Task T13_When_UnauthenticatedUserAccessesCheckout_ShouldBeRedirectedToLogin()
         {
             LoginPage loginPage = await NavigateToLoginPageAsync("https://www.saucedemo.com/checkout-step-two.html");
@@ -379,6 +392,7 @@ namespace SwagLabs
         }
 
         [Test]
+        [Category("Checkout")]
         public async Task T14_When_MultipleUsersPerformActions_Should_IsolateSessionsCorrectly()
         {
             LoginPage loginPage = await NavigateToLoginPageAsync();
