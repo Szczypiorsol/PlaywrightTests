@@ -35,41 +35,53 @@ namespace SwagLabs.PlaywrightTests
         [OneTimeSetUp]
         public async Task OneTimeSetupAsync()
         {
-            //_configuration = new ConfigurationBuilder()
-            //    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            //    .AddEnvironmentVariables()
-            //    .AddUserSecrets<BaseTest>(optional: true)
-            //    .Build();
+            _configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                //.AddEnvironmentVariables()
+                //.AddUserSecrets<BaseTest>(optional: true)
+                .Build();
 
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
+                .MinimumLevel.Is(Enum.TryParse<Serilog.Events.LogEventLevel>(_configuration["Logger:MinimumLevel"], true, out var level) ? level : Serilog.Events.LogEventLevel.Information)
                 .WriteTo.Console()
                 .WriteTo.File(
-                    path: "logs/log-.txt", 
-                    rollingInterval: RollingInterval.Day,
+                    path: _configuration["Logger:LogFilePath"].ToString(), 
+                    rollingInterval: Enum.TryParse<RollingInterval>(_configuration["Logger:RollingInterval"], true, out var rollingInterval) ? rollingInterval : RollingInterval.Day,
                     outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
             Logger = Log.Logger;
+            Logger.Information("==========================");
             Logger.Information("=== Test Suite Started ===");
+            Logger.Information("==========================");
 
-              PlaywrightInstance = await Playwright.CreateAsync();
-            Browser = await PlaywrightInstance.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = !Debugger.IsAttached });
+            PlaywrightInstance = await Playwright.CreateAsync();
+            switch (_configuration["Browser:Type"]?.ToLower())
+            {
+                case "chromium":
+                    Browser = await PlaywrightInstance.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = !Debugger.IsAttached });
+                    break;
+                case "firefox":
+                    Browser = await PlaywrightInstance.Firefox.LaunchAsync(new BrowserTypeLaunchOptions { Headless = !Debugger.IsAttached });
+                    break;
+                case "webkit":
+                    Browser = await PlaywrightInstance.Webkit.LaunchAsync(new BrowserTypeLaunchOptions { Headless = !Debugger.IsAttached });
+                    break;
+                default:
+                    Logger.Warning("Unsupported browser type specified in configuration. Defaulting to Chromium.");
+                    Browser = await PlaywrightInstance.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = !Debugger.IsAttached });
+                    break;
+            }
 
-            UserLogin = Users["StandardUser"];
-            //Pozostałe loginy na potrzeby testów negatywnych
-            //UserLogin = Users["LockedOutUser"];
-            //UserLogin = Users["ProblemUser"];
-            //UserLogin = Users["PerformanceGlitchUser"];
-            //UserLogin = Users["ErrorUser"];
-            //UserLogin = Users["VisualUser"];
+            UserLogin = Users[_configuration["Browser:DefaultUser"] ?? "StandardUser"];
 
-            Logger.Information($"OneTimeSetup completed - Browser initialized with user: {UserLogin}");
+            Logger.Debug($"OneTimeSetup completed - Browser initialized with user: {UserLogin}");
         }
 
         [SetUp]
         public async Task Setup()
         {
             string testName = TestContext.CurrentContext.Test.Name;
+            Logger?.Information("################################################################################");
             Logger?.Information($"=== Starting test: {testName} ===");
 
             // Każdy test dostaje własny context i stronę (izolacja)
@@ -107,6 +119,7 @@ namespace SwagLabs.PlaywrightTests
             {
                 Logger?.Information("Test {TestName} finished with status: {TestResult}", testName, testResult);
             }
+            Logger?.Information("################################################################################");
 
             if (BrowserContext != null)
             {
@@ -119,7 +132,9 @@ namespace SwagLabs.PlaywrightTests
         [OneTimeTearDown]
         public async Task OneTimeTearDownAsync()
         {
+            Logger?.Information("============================");
             Logger?.Information("=== Test Suite Completed ===");
+            Logger?.Information("============================");
 
             if (Browser != null)
             {
