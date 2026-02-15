@@ -41,7 +41,7 @@ namespace SwagLabs.Pages
             await ContinueButton.WaitToBeVisibleAsync();
 
             _isInitialized = true;
-            _logger.Information("[CheckoutPage] initialized successfully.");
+            _logger.Debug("[CheckoutPage] initialized successfully.");
         }
 
         public static async Task<CheckoutPage> InitAsync(IPage page, ILogger logger)
@@ -61,7 +61,7 @@ namespace SwagLabs.Pages
                 await LastNameTextBox.EnterTextAsync(lastName);
             if (!string.IsNullOrWhiteSpace(postalCode))
                 await PostalCodeTextBox.EnterTextAsync(postalCode);
-            _logger.Information("Checkout information filled.");
+            _logger.Debug("Checkout information filled.");
             return await InitAsync(_page, _logger);
         }
 
@@ -70,7 +70,7 @@ namespace SwagLabs.Pages
             _logger?.Information("Clicking Continue button...");
             EnsureInitialized();
             await ContinueButton.ClickAsync();
-            _logger.Information("Navigated to Checkout Overview Page.");
+            _logger.Debug("Navigated to Checkout Overview Page.");
             return await CheckoutOverviewPage.InitAsync(_page, _logger);
         }
 
@@ -79,7 +79,7 @@ namespace SwagLabs.Pages
             _logger?.Information("Clicking Continue button expecting error...");
             EnsureInitialized();
             await ContinueButton.ClickAsync();
-            _logger.Information("Staying on Checkout Page due to expected error.");
+            _logger.Debug("Staying on Checkout Page due to expected error.");
             return await InitAsync(_page, _logger);
         }
 
@@ -88,7 +88,7 @@ namespace SwagLabs.Pages
             _logger?.Information("Clicking Cancel button...");
             EnsureInitialized();
             await CancelButton.ClickAsync();
-            _logger.Information("Navigated back to Cart Page.");
+            _logger.Debug("Navigated back to Cart Page.");
             return await CartPage.InitAsync(_page, _logger);
         }
     }

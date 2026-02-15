@@ -50,9 +50,9 @@ namespace SwagLabs.PlaywrightTests
                     outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
             Logger = Log.Logger;
-            Logger.Information("==========================");
-            Logger.Information("=== Test Suite Started ===");
-            Logger.Information("==========================");
+            Logger?.Information("================================================================================");
+            Logger.Information("============================== Test Suite Started ==============================");
+            Logger?.Information("================================================================================");
 
             PlaywrightInstance = await Playwright.CreateAsync();
             switch (_configuration["Browser:Type"]?.ToLower())
@@ -81,7 +81,7 @@ namespace SwagLabs.PlaywrightTests
         public async Task Setup()
         {
             string testName = TestContext.CurrentContext.Test.Name;
-            Logger?.Information("################################################################################");
+            Logger?.Information("================================================================================");
             Logger?.Information($"=== Starting test: {testName} ===");
 
             // Każdy test dostaje własny context i stronę (izolacja)
@@ -119,7 +119,7 @@ namespace SwagLabs.PlaywrightTests
             {
                 Logger?.Information("Test {TestName} finished with status: {TestResult}", testName, testResult);
             }
-            Logger?.Information("################################################################################");
+            Logger?.Information("================================================================================");
 
             if (BrowserContext != null)
             {
@@ -132,9 +132,9 @@ namespace SwagLabs.PlaywrightTests
         [OneTimeTearDown]
         public async Task OneTimeTearDownAsync()
         {
-            Logger?.Information("============================");
-            Logger?.Information("=== Test Suite Completed ===");
-            Logger?.Information("============================");
+            Logger?.Information("================================================================================");
+            Logger?.Information("============================= Test Suite Completed =============================");
+            Logger?.Information("================================================================================");
 
             if (Browser != null)
             {

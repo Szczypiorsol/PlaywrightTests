@@ -50,7 +50,7 @@ namespace SwagLabs.Pages
             await FinishButton.WaitToBeVisibleAsync();
 
             _isInitialized = true;
-            _logger.Information("[CheckoutOverviewPage] initialized successfully.");
+            _logger.Debug("[CheckoutOverviewPage] initialized successfully.");
         }
 
         public static async Task<CheckoutOverviewPage> InitAsync(IPage page, ILogger logger)
@@ -75,7 +75,7 @@ namespace SwagLabs.Pages
             _logger?.Information("Clicking [Cancel] button on [CheckoutOverviewPage]...");
             EnsureInitialized();
             await CancelButton.ClickAsync();
-            _logger.Information("[Cancel] button clicked.");
+            _logger.Debug("[Cancel] button clicked.");
             return await CheckoutPage.InitAsync(_page, _logger);
         }
 
@@ -84,7 +84,7 @@ namespace SwagLabs.Pages
             _logger?.Information("Clicking [Finish] button on [CheckoutOverviewPage]...");
             EnsureInitialized();
             await _finishButton.ClickAsync();
-            _logger.Information("[Finish] button clicked.");
+            _logger.Debug("[Finish] button clicked.");
             return await CheckoutCompletePage.InitAsync(_page, _logger);
         }
     }

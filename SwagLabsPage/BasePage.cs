@@ -46,7 +46,7 @@ namespace SwagLabs.Pages
             _logger?.Information($"Refreshing [{_pageName}]...");
             EnsureInitialized();
             await _page.ReloadAsync();
-            _logger?.Information($"[{_pageName}] refreshed successfully.");
+            _logger?.Debug($"[{_pageName}] refreshed successfully.");
         }
 
         public async Task<LoginPage> LogoutAsync()
@@ -59,7 +59,7 @@ namespace SwagLabs.Pages
             _logger.Information($"Logging out from [{_pageName}]...");
             await BurgerButton.ClickAsync();
             await LogoutButton.ClickAsync();
-            _logger.Information("Logout successful. Navigating to Login Page...");
+            _logger.Debug("Logout successful. Navigating to Login Page...");
             return await LoginPage.InitAsync(_page, _logger);
         }
     }

@@ -33,7 +33,7 @@ namespace SwagLabs.Pages
             await LoginButton.WaitToBeVisibleAsync();
 
             _isInitialized = true;
-            _logger.Information("[LoginPage] initialized successfully.");
+            _logger.Debug("[LoginPage] initialized successfully.");
         }
 
         public static async Task<LoginPage> InitAsync(IPage page, ILogger logger)
@@ -50,7 +50,7 @@ namespace SwagLabs.Pages
             await UsernameTextBox.EnterTextAsync(username);
             await PasswordTextBox.EnterTextAsync(password);
             await ClickLoginButton();
-            _logger.Information("Login successful, navigating to ProductsPage.");
+            _logger.Debug("Login successful, navigating to ProductsPage.");
             return await ProductsPage.InitAsync(_page, _logger);
         }
 
@@ -61,7 +61,7 @@ namespace SwagLabs.Pages
             await UsernameTextBox.EnterTextAsync(username);
             await PasswordTextBox.EnterTextAsync(password);
             await ClickLoginButton();
-            _logger.Information("Login attempt with invalid credentials completed.");
+            _logger.Debug("Login attempt with invalid credentials completed.");
             return await InitAsync(_page, _logger);
         }
 

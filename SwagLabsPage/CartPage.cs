@@ -36,7 +36,7 @@ namespace SwagLabs.Pages
             await CheckoutButton.WaitToBeVisibleAsync();
 
             _isInitialized = true;
-            _logger.Information("[CartPage] initialized successfully.");
+            _logger.Debug("[CartPage] initialized successfully.");
         }
 
         public static async Task<CartPage> InitAsync(IPage page, ILogger logger)
@@ -61,7 +61,7 @@ namespace SwagLabs.Pages
             _logger.Information("Removing item #{OrdinalNumber} from the cart...", ordinalNumber);
             EnsureInitialized();
             await ProductsListControl.ClickOnItemElementAsync(ordinalNumber, "button");
-            _logger.Information("Item #{OrdinalNumber} removed from the cart.", ordinalNumber);
+            _logger.Debug("Item #{OrdinalNumber} removed from the cart.", ordinalNumber);
             return await InitAsync(_page, _logger);
         }
 
@@ -70,7 +70,7 @@ namespace SwagLabs.Pages
             _logger.Information("Clicking 'Continue Shopping' button...");
             EnsureInitialized();
             await ContinueShoppingButton.ClickAsync();
-            _logger.Information("'Continue Shopping' button clicked.");
+            _logger.Debug("'Continue Shopping' button clicked.");
             return await ProductsPage.InitAsync(_page, _logger);
         }
 
@@ -79,7 +79,7 @@ namespace SwagLabs.Pages
             _logger.Information("Clicking 'Checkout' button...");
             EnsureInitialized();
             await CheckoutButton.ClickAsync();
-            _logger.Information("'Checkout' button clicked.");
+            _logger.Debug("'Checkout' button clicked.");
             return await CheckoutPage.InitAsync(_page, _logger);
         }
     }

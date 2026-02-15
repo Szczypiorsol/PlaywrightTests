@@ -26,7 +26,7 @@ namespace SwagLabs.Pages
             await BackHomeButton.WaitToBeVisibleAsync();
 
             _isInitialized = true;
-            _logger.Information("[CheckoutCompletePage] initialized successfully.");
+            _logger.Debug("[CheckoutCompletePage] initialized successfully.");
         }
 
         public static async Task<CheckoutCompletePage> InitAsync(IPage page, ILogger logger)
@@ -41,7 +41,7 @@ namespace SwagLabs.Pages
             _logger.Information("Clicking [Back Home] button on [CheckoutCompletePage]...");
             EnsureInitialized();
             await BackHomeButton.ClickAsync();
-            _logger.Information("Clicked [Back Home] button on [CheckoutCompletePage]. Navigating to [ProductsPage]...");
+            _logger.Debug("Clicked [Back Home] button on [CheckoutCompletePage]. Navigating to [ProductsPage]...");
             return await ProductsPage.InitAsync(_page, _logger);
         }
     }

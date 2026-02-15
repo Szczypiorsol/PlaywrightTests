@@ -33,7 +33,7 @@ namespace SwagLabs.Pages
             await ProductsListControl.WaitToBeVisibleAsync();
 
             _isInitialized = true;
-            _logger.Information("[ProductsPage] initialized successfully.");
+            _logger.Debug("[ProductsPage] initialized successfully.");
         }
 
         public static async Task<ProductsPage> InitAsync(IPage page, ILogger logger)
@@ -58,7 +58,7 @@ namespace SwagLabs.Pages
             _logger.Information("Clicking on product button at ordinal number {OrdinalNumber}...", ordinalNumber);
             EnsureInitialized();
             await ProductsListControl.ClickOnItemElementAsync(ordinalNumber, "button");
-            _logger.Information("Clicked on product button at ordinal number {OrdinalNumber}.", ordinalNumber);
+            _logger.Debug("Clicked on product button at ordinal number {OrdinalNumber}.", ordinalNumber);
             return await InitAsync(_page, _logger);
         }
 
@@ -67,7 +67,7 @@ namespace SwagLabs.Pages
             _logger.Information("Removing product at ordinal number {OrdinalNumber}...", ordinalNumber);
             EnsureInitialized();
             await ProductsListControl.ClickOnItemElementAsync(ordinalNumber, "button");
-            _logger.Information("Removed product at ordinal number {OrdinalNumber}.", ordinalNumber);
+            _logger.Debug("Removed product at ordinal number {OrdinalNumber}.", ordinalNumber);
             return await InitAsync(_page, _logger);
         }
 
@@ -76,7 +76,7 @@ namespace SwagLabs.Pages
             _logger.Information("Selecting sort option '{OptionText}'...", optionText);
             EnsureInitialized();
             await SortComboBox.SelectItemByTextAsync(optionText);
-            _logger.Information("Selected sort option '{OptionText}'.", optionText);
+            _logger.Debug("Selected sort option '{OptionText}'.", optionText);
             return await InitAsync(_page, _logger);
         }
 
@@ -85,7 +85,7 @@ namespace SwagLabs.Pages
             _logger.Information("Clicking on Cart button...");
             EnsureInitialized();
             await CartButton.ClickAsync();
-            _logger.Information("Clicked on Cart button.");
+            _logger.Debug("Clicked on Cart button.");
             return await CartPage.InitAsync(_page, _logger);
         }
     }
