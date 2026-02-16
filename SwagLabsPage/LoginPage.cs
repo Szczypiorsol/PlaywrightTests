@@ -17,7 +17,7 @@ namespace SwagLabs.Pages
         public TextBox ErrorMessageTextBox => _errorMessageTextBox;
         public Button LoginButton => _loginButton;
 
-        public LoginPage(IPage page, ILogger logger) : base(page, "LoginPage", logger)
+        public LoginPage(IPage page) : base(page, "LoginPage")
         {
             _usernameTextBox = new TextBox(_page, GetBy.Role, "Username");
             _passwordTextBox = new TextBox(_page, GetBy.Role, "Password");
@@ -36,9 +36,9 @@ namespace SwagLabs.Pages
             _logger.Debug("[LoginPage] initialized successfully.");
         }
 
-        public static async Task<LoginPage> InitAsync(IPage page, ILogger logger)
+        public static async Task<LoginPage> InitAsync(IPage page)
         {
-            LoginPage loginPage = new(page, logger);
+            LoginPage loginPage = new(page);
             await loginPage.InitAsync();
             return loginPage;
         }
@@ -51,7 +51,7 @@ namespace SwagLabs.Pages
             await PasswordTextBox.EnterTextAsync(password);
             await ClickLoginButton();
             _logger.Debug("Login successful, navigating to ProductsPage.");
-            return await ProductsPage.InitAsync(_page, _logger);
+            return await ProductsPage.InitAsync(_page);
         }
 
         public async Task<LoginPage> LoginWithInvalidCredentialsAsync(string username, string password)
@@ -62,7 +62,7 @@ namespace SwagLabs.Pages
             await PasswordTextBox.EnterTextAsync(password);
             await ClickLoginButton();
             _logger.Debug("Login attempt with invalid credentials completed.");
-            return await InitAsync(_page, _logger);
+            return await InitAsync(_page);
         }
 
         private async Task ClickLoginButton()

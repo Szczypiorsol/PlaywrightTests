@@ -21,7 +21,7 @@ namespace SwagLabs.PlaywrightTests
             }
             catch (Exception ex)
             {
-                Logger?.Error($"An error occurred during test execution: {ex.Message}");
+                Logger?.Error($"An error occurred during test execution: {ex}");
                 throw new Exception("An error occurred during test execution", ex);
             }
         }
@@ -40,7 +40,7 @@ namespace SwagLabs.PlaywrightTests
             }
             catch (Exception ex)
             {
-                Logger?.Error($"An error occurred during test execution: {ex.Message}");
+                Logger?.Error($"An error occurred during test execution: {ex}");
                 throw new Exception("An error occurred during test execution", ex);
             }
         }
@@ -59,7 +59,7 @@ namespace SwagLabs.PlaywrightTests
             }
             catch (Exception ex)
             {
-                Logger?.Error($"An error occurred during test execution: {ex.Message}");
+                Logger?.Error($"An error occurred during test execution: {ex}");
                 throw new Exception("An error occurred during test execution", ex);
             }
         }
@@ -99,7 +99,7 @@ namespace SwagLabs.PlaywrightTests
             }
             catch (Exception ex)
             {
-                Logger?.Error($"An error occurred during test execution: {ex.Message}");
+                Logger?.Error($"An error occurred during test execution: {ex}");
                 throw new Exception("An error occurred during test execution", ex);
             }
         }
@@ -173,7 +173,7 @@ namespace SwagLabs.PlaywrightTests
             }
             catch (Exception ex)
             {
-                Logger?.Error($"An error occurred during test execution: {ex.Message}");
+                Logger?.Error($"An error occurred during test execution: {ex}");
                 throw new Exception("An error occurred during test execution", ex);
             }
         }
@@ -213,7 +213,7 @@ namespace SwagLabs.PlaywrightTests
             }
             catch (Exception ex)
             {
-                Logger?.Error($"An error occurred during test execution: {ex.Message}");
+                Logger?.Error($"An error occurred during test execution: {ex}");
                 throw new Exception("An error occurred during test execution", ex);
             }
         }
@@ -256,7 +256,7 @@ namespace SwagLabs.PlaywrightTests
             }
             catch (Exception ex)
             {
-                Logger?.Error($"An error occurred during test execution: {ex.Message}");
+                Logger?.Error($"An error occurred during test execution: {ex}");
                 throw new Exception("An error occurred during test execution", ex);
             }
         }
@@ -299,7 +299,7 @@ namespace SwagLabs.PlaywrightTests
             }
             catch (Exception ex)
             {
-                Logger?.Error($"An error occurred during test execution: {ex.Message}");
+                Logger?.Error($"An error occurred during test execution: {ex}");
                 throw new Exception("An error occurred during test execution", ex);
             }
         }
@@ -351,7 +351,7 @@ namespace SwagLabs.PlaywrightTests
             }
             catch (Exception ex)
             {
-                Logger?.Error($"An error occurred during test execution: {ex.Message}");
+                Logger?.Error($"An error occurred during test execution: {ex}");
                 throw new Exception("An error occurred during test execution", ex);
             }
         }
@@ -402,7 +402,7 @@ namespace SwagLabs.PlaywrightTests
             }
             catch (Exception ex)
             {
-                Logger?.Error($"An error occurred during test execution: {ex.Message}");
+                Logger?.Error($"An error occurred during test execution: {ex}");
                 throw new Exception("An error occurred during test execution", ex);
             }
         }
@@ -451,7 +451,7 @@ namespace SwagLabs.PlaywrightTests
             }
             catch (Exception ex)
             {
-                Logger?.Error($"An error occurred during test execution: {ex.Message}");
+                Logger?.Error($"An error occurred during test execution: {ex}");
                 throw new Exception("An error occurred during test execution", ex);
             }
         }
@@ -473,7 +473,7 @@ namespace SwagLabs.PlaywrightTests
             }
             catch (Exception ex)
             {
-                Logger?.Error($"An error occurred during test execution: {ex.Message}");
+                Logger?.Error($"An error occurred during test execution: {ex}");
                 throw new Exception("An error occurred during test execution", ex);
             }
         }
@@ -490,7 +490,7 @@ namespace SwagLabs.PlaywrightTests
             }
             catch (Exception ex)
             {
-                Logger?.Error($"An error occurred during test execution: {ex.Message}");
+                Logger?.Error($"An error occurred during test execution: {ex}");
                 throw new Exception("An error occurred during test execution", ex);
             }
         }
@@ -508,7 +508,7 @@ namespace SwagLabs.PlaywrightTests
                 browserContext2 = await Browser.NewContextAsync();
                 IPage pageInstance2 = await browserContext2.NewPageAsync();
                 await pageInstance2.GotoAsync("https://www.saucedemo.com/");
-                LoginPage loginPage2 = await LoginPage.InitAsync(pageInstance2, Logger);
+                LoginPage loginPage2 = await LoginPage.InitAsync(pageInstance2);
                 string userToLogin = UserLogin == Users["StandardUser"] ? Users["VisualUser"] : Users["StandardUser"];
             
                 ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
@@ -558,7 +558,7 @@ namespace SwagLabs.PlaywrightTests
             }
             catch (Exception ex)
             {
-                Logger?.Error($"An error occurred during test execution: {ex.Message}");
+                Logger?.Error($"An error occurred during test execution: {ex}");
                 throw new Exception("An error occurred during test execution", ex);
             }
             finally

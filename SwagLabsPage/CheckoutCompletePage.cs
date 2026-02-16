@@ -13,7 +13,7 @@ namespace SwagLabs.Pages
         public TextBox ThankYouMessageTextBox => _thankYouMessageTextBox;
         public Button BackHomeButton => _backHomeButton;
 
-        public CheckoutCompletePage(IPage page, ILogger logger) : base(page, "CheckoutCompletePage", logger)
+        public CheckoutCompletePage(IPage page) : base(page, "CheckoutCompletePage")
         {
             _thankYouMessageTextBox = new TextBox(_page, GetBy.CssSelector, "h2.complete-header");
             _backHomeButton = new Button(_page, GetBy.Role, "Back Home");
@@ -29,9 +29,9 @@ namespace SwagLabs.Pages
             _logger.Debug("[CheckoutCompletePage] initialized successfully.");
         }
 
-        public static async Task<CheckoutCompletePage> InitAsync(IPage page, ILogger logger)
+        public static async Task<CheckoutCompletePage> InitAsync(IPage page)
         {
-            CheckoutCompletePage checkoutCompletePage = new(page, logger);
+            CheckoutCompletePage checkoutCompletePage = new(page);
             await checkoutCompletePage.InitAsync();
             return checkoutCompletePage;
         }
@@ -42,7 +42,7 @@ namespace SwagLabs.Pages
             EnsureInitialized();
             await BackHomeButton.ClickAsync();
             _logger.Debug("Clicked [Back Home] button on [CheckoutCompletePage]. Navigating to [ProductsPage]...");
-            return await ProductsPage.InitAsync(_page, _logger);
+            return await ProductsPage.InitAsync(_page);
         }
     }
 }

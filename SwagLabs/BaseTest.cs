@@ -3,6 +3,7 @@ using Serilog;
 using SwagLabs.Pages;
 using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
+using Helpers;
 
 namespace SwagLabs.PlaywrightTests
 {
@@ -24,12 +25,12 @@ namespace SwagLabs.PlaywrightTests
         protected IBrowserContext? BrowserContext;
         protected IPage? PageInstance;
         protected string UserLogin;
-        protected ILogger Logger;
+        protected ILogger? Logger;
 
         protected async Task<LoginPage> NavigateToLoginPageAsync(string url = "https://www.saucedemo.com/")
         {
             await PageInstance.GotoAsync(url);
-            return await LoginPage.InitAsync(PageInstance, Logger);
+            return await LoginPage.InitAsync(PageInstance);
         }
 
         [OneTimeSetUp]
@@ -41,15 +42,9 @@ namespace SwagLabs.PlaywrightTests
                 //.AddUserSecrets<BaseTest>(optional: true)
                 .Build();
 
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Is(Enum.TryParse<Serilog.Events.LogEventLevel>(_configuration["Logger:MinimumLevel"], true, out var level) ? level : Serilog.Events.LogEventLevel.Information)
-                .WriteTo.Console()
-                .WriteTo.File(
-                    path: _configuration["Logger:LogFilePath"].ToString(), 
-                    rollingInterval: Enum.TryParse<RollingInterval>(_configuration["Logger:RollingInterval"], true, out var rollingInterval) ? rollingInterval : RollingInterval.Day,
-                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
-                .CreateLogger();
-            Logger = Log.Logger;
+            LogHelper.InitializeLogger();
+            Logger = LogHelper.Logger;
+
             Logger?.Information("================================================================================");
             Logger.Information("============================== Test Suite Started ==============================");
             Logger?.Information("================================================================================");

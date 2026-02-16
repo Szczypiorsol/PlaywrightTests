@@ -17,7 +17,7 @@ namespace SwagLabs.Pages
         public ListControl ProductsListControl => _productsListControl;
         public TextBox NumberOfProductsInCartTextBox => _numberOfProductsInCartTextBox;
 
-        public ProductsPage(IPage page, ILogger logger) : base(page, "[ProductsPage]", logger)
+        public ProductsPage(IPage page) : base(page, "[ProductsPage]")
         {
             _cartButton = new Button(_page, GetBy.CssSelector, "a.shopping_cart_link");
             _sortComboBox = new ComboBox(_page, GetBy.CssSelector, "select.product_sort_container", GetBy.CssSelector, "option");
@@ -36,9 +36,9 @@ namespace SwagLabs.Pages
             _logger.Debug("[ProductsPage] initialized successfully.");
         }
 
-        public static async Task<ProductsPage> InitAsync(IPage page, ILogger logger)
+        public static async Task<ProductsPage> InitAsync(IPage page)
         {
-            ProductsPage productsPage = new(page, logger);
+            ProductsPage productsPage = new(page);
             await productsPage.InitAsync();
             return productsPage;
         }
@@ -59,7 +59,7 @@ namespace SwagLabs.Pages
             EnsureInitialized();
             await ProductsListControl.ClickOnItemElementAsync(ordinalNumber, "button");
             _logger.Debug("Clicked on product button at ordinal number {OrdinalNumber}.", ordinalNumber);
-            return await InitAsync(_page, _logger);
+            return await InitAsync(_page);
         }
 
         public async Task<ProductsPage> RemoveProductByOrdinalNumberAsync(int ordinalNumber)
@@ -68,7 +68,7 @@ namespace SwagLabs.Pages
             EnsureInitialized();
             await ProductsListControl.ClickOnItemElementAsync(ordinalNumber, "button");
             _logger.Debug("Removed product at ordinal number {OrdinalNumber}.", ordinalNumber);
-            return await InitAsync(_page, _logger);
+            return await InitAsync(_page);
         }
 
         public async Task<ProductsPage> SelectSortOptionAsync(string optionText)
@@ -77,7 +77,7 @@ namespace SwagLabs.Pages
             EnsureInitialized();
             await SortComboBox.SelectItemByTextAsync(optionText);
             _logger.Debug("Selected sort option '{OptionText}'.", optionText);
-            return await InitAsync(_page, _logger);
+            return await InitAsync(_page);
         }
 
         public async Task<CartPage> ClickOnCartButtonAsync()
@@ -86,7 +86,7 @@ namespace SwagLabs.Pages
             EnsureInitialized();
             await CartButton.ClickAsync();
             _logger.Debug("Clicked on Cart button.");
-            return await CartPage.InitAsync(_page, _logger);
+            return await CartPage.InitAsync(_page);
         }
     }
 }

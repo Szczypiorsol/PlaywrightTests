@@ -21,7 +21,7 @@ namespace SwagLabs.Pages
         public Button ContinueButton => _continueButton;
         public TextBox ErrorMessageTextBox => _errorMessageTextBox;
 
-        public CheckoutPage(IPage page, ILogger logger) : base(page, "CheckoutPage", logger)
+        public CheckoutPage(IPage page) : base(page, "CheckoutPage")
         {
             _firstNameTextBox = new TextBox(_page, GetBy.Placeholder, "First Name");
             _lastNameTextBox = new TextBox(_page, GetBy.Placeholder, "Last Name");
@@ -44,9 +44,9 @@ namespace SwagLabs.Pages
             _logger.Debug("[CheckoutPage] initialized successfully.");
         }
 
-        public static async Task<CheckoutPage> InitAsync(IPage page, ILogger logger)
+        public static async Task<CheckoutPage> InitAsync(IPage page)
         {
-            CheckoutPage checkoutPage = new(page, logger);
+            CheckoutPage checkoutPage = new(page);
             await checkoutPage.InitAsync();
             return checkoutPage;
         }
@@ -62,7 +62,7 @@ namespace SwagLabs.Pages
             if (!string.IsNullOrWhiteSpace(postalCode))
                 await PostalCodeTextBox.EnterTextAsync(postalCode);
             _logger.Debug("Checkout information filled.");
-            return await InitAsync(_page, _logger);
+            return await InitAsync(_page);
         }
 
         public async Task<CheckoutOverviewPage> ClickContinueAsync()
@@ -71,7 +71,7 @@ namespace SwagLabs.Pages
             EnsureInitialized();
             await ContinueButton.ClickAsync();
             _logger.Debug("Navigated to Checkout Overview Page.");
-            return await CheckoutOverviewPage.InitAsync(_page, _logger);
+            return await CheckoutOverviewPage.InitAsync(_page);
         }
 
         public async Task<CheckoutPage> ClickContinueErrorExpectedAsync()
@@ -80,7 +80,7 @@ namespace SwagLabs.Pages
             EnsureInitialized();
             await ContinueButton.ClickAsync();
             _logger.Debug("Staying on Checkout Page due to expected error.");
-            return await InitAsync(_page, _logger);
+            return await InitAsync(_page);
         }
 
         public async Task<CartPage> ClickCancelAsync()
@@ -89,7 +89,7 @@ namespace SwagLabs.Pages
             EnsureInitialized();
             await CancelButton.ClickAsync();
             _logger.Debug("Navigated back to Cart Page.");
-            return await CartPage.InitAsync(_page, _logger);
+            return await CartPage.InitAsync(_page);
         }
     }
 }

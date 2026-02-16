@@ -25,7 +25,7 @@ namespace SwagLabs.Pages
         public Button CancelButton => _cancelButton;
         public Button FinishButton => _finishButton;
 
-        public CheckoutOverviewPage(IPage page, ILogger logger) : base(page, "CheckoutOverviewPage", logger)
+        public CheckoutOverviewPage(IPage page) : base(page, "CheckoutOverviewPage")
         {
             _productsItemList = new ListControl(_page, GetBy.CssSelector, "div.cart_list",GetBy.CssSelector, "div.cart_item");
             _paymentInformationTextBox = new TextBox(_page, GetBy.TestId, "payment-info-value");
@@ -53,9 +53,9 @@ namespace SwagLabs.Pages
             _logger.Debug("[CheckoutOverviewPage] initialized successfully.");
         }
 
-        public static async Task<CheckoutOverviewPage> InitAsync(IPage page, ILogger logger)
+        public static async Task<CheckoutOverviewPage> InitAsync(IPage page)
         {
-            CheckoutOverviewPage checkoutOverviewPage = new(page, logger);
+            CheckoutOverviewPage checkoutOverviewPage = new(page);
             await checkoutOverviewPage.InitAsync();
             return checkoutOverviewPage;
         }
@@ -76,7 +76,7 @@ namespace SwagLabs.Pages
             EnsureInitialized();
             await CancelButton.ClickAsync();
             _logger.Debug("[Cancel] button clicked.");
-            return await CheckoutPage.InitAsync(_page, _logger);
+            return await CheckoutPage.InitAsync(_page);
         }
 
         public async Task<CheckoutCompletePage> ClickFinishAsync()
@@ -85,7 +85,7 @@ namespace SwagLabs.Pages
             EnsureInitialized();
             await _finishButton.ClickAsync();
             _logger.Debug("[Finish] button clicked.");
-            return await CheckoutCompletePage.InitAsync(_page, _logger);
+            return await CheckoutCompletePage.InitAsync(_page);
         }
     }
 }

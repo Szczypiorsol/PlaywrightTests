@@ -33,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Helpers.Logger\Helpers.csproj" />
     <ProjectReference Include="..\SwagLabsPage\SwagLabs.Pages.csproj" />
   </ItemGroup>
 

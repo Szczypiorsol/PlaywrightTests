@@ -15,7 +15,7 @@ namespace SwagLabs.Pages
         public Button ContinueShoppingButton => _continueShoppingButton;
         public Button CheckoutButton => _checkoutButton;
 
-        public CartPage(IPage page, ILogger logger) : base(page, "CartPage", logger)
+        public CartPage(IPage page) : base(page, "CartPage")
         {
             _productsListControl = new ListControl(
                 page: _page,
@@ -39,9 +39,9 @@ namespace SwagLabs.Pages
             _logger.Debug("[CartPage] initialized successfully.");
         }
 
-        public static async Task<CartPage> InitAsync(IPage page, ILogger logger)
+        public static async Task<CartPage> InitAsync(IPage page)
         {
-            CartPage cartPage = new(page, logger);
+            CartPage cartPage = new(page);
             await cartPage.InitAsync();
             return cartPage;
         }
@@ -62,7 +62,7 @@ namespace SwagLabs.Pages
             EnsureInitialized();
             await ProductsListControl.ClickOnItemElementAsync(ordinalNumber, "button");
             _logger.Debug("Item #{OrdinalNumber} removed from the cart.", ordinalNumber);
-            return await InitAsync(_page, _logger);
+            return await InitAsync(_page);
         }
 
         public async Task<ProductsPage> ClickContinueShoppingAsync()
@@ -71,7 +71,7 @@ namespace SwagLabs.Pages
             EnsureInitialized();
             await ContinueShoppingButton.ClickAsync();
             _logger.Debug("'Continue Shopping' button clicked.");
-            return await ProductsPage.InitAsync(_page, _logger);
+            return await ProductsPage.InitAsync(_page);
         }
 
         public async Task<CheckoutPage> ClickCheckoutAsync()
@@ -80,7 +80,7 @@ namespace SwagLabs.Pages
             EnsureInitialized();
             await CheckoutButton.ClickAsync();
             _logger.Debug("'Checkout' button clicked.");
-            return await CheckoutPage.InitAsync(_page, _logger);
+            return await CheckoutPage.InitAsync(_page);
         }
     }
 }

@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Helpers/">
+    <Project Path="Helpers.Logger/Helpers.csproj" Id="74c739a0-4585-43fe-8a5a-5f595078751c" />
+  </Folder>
   <Folder Name="/SwagLabs/">
     <Project Path="SwagLabs.E2E/SwagLabs.ReqnrollTests.csproj" Id="606ab00a-c1d4-47fe-8e62-1afacfb59898" />
     <Project Path="SwagLabs/SwagLabs.PlaywrightTests.csproj" />
