@@ -1,9 +1,9 @@
-﻿using Controls;
-using Microsoft.Playwright;
-using static Controls.Control;
+﻿using Microsoft.Playwright;
+using static Tests.SwagLabs.Controls.Control;
 using Tests.Infrastructure;
+using Tests.SwagLabs.Controls;
 
-namespace SwagLabs.Pages
+namespace Tests.SwagLabs.Pages
 {
     public abstract class BasePage
     {

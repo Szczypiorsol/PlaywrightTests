@@ -27,14 +27,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="NUnit3TestAdapter" Version="6.1.0" />
+    <PackageReference Include="Reqnroll" Version="3.3.3" />
     <PackageReference Include="Serilog" Version="4.3.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Helpers.Logger\Helpers.csproj" />
-    <ProjectReference Include="..\SwagLabsPage\SwagLabs.Pages.csproj" />
+    <ProjectReference Include="..\Helpers.Logger\Tests.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,11 +44,15 @@
     <Using Include="System.Threading.Tasks" />
   </ItemGroup>
 
-	<ItemGroup>
-		<Content Include="appsettings.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
+  <ItemGroup>
+    <Folder Include="ReqnrollTests\StepDefinitions\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="ReqnrollTests\Features\CopilotGenerated.feature.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+  </ItemGroup>
 
 
 </Project>

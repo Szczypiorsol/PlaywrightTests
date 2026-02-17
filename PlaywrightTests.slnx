@@ -1,12 +1,7 @@
 <Solution>
-  <Folder Name="/Helpers/">
-    <Project Path="Helpers.Logger/Helpers.csproj" Id="74c739a0-4585-43fe-8a5a-5f595078751c" />
+  <Folder Name="/Tests/">
+    <Project Path="Helpers.Logger/Tests.Infrastructure.csproj" Id="74c739a0-4585-43fe-8a5a-5f595078751c" />
+    <Project Path="SwagLabs/Tests.SwagLabs.csproj" />
+    <Project Path="TestsLauncher/Tests.Launcher.csproj" Id="1955f448-7a76-4a07-a23f-322fd4ed418d" />
   </Folder>
-  <Folder Name="/SwagLabs/">
-    <Project Path="SwagLabs.E2E/SwagLabs.ReqnrollTests.csproj" Id="606ab00a-c1d4-47fe-8e62-1afacfb59898" />
-    <Project Path="SwagLabs/SwagLabs.PlaywrightTests.csproj" />
-    <Project Path="SwagLabsPage/SwagLabs.Pages.csproj" Id="56f498a9-6e78-4eb5-9e7e-fc3e2d6fac07" />
-  </Folder>
-  <Project Path="Controls/Controls.csproj" />
-  <Project Path="TestsLauncher/TestsLauncher.csproj" Id="1955f448-7a76-4a07-a23f-322fd4ed418d" />
 </Solution>

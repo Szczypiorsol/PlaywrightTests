@@ -1,11 +1,11 @@
 ﻿using Microsoft.Playwright;
 using Serilog;
-using SwagLabs.Pages;
 using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
-using Helpers;
+using Tests.Infrastructure;
+using Tests.SwagLabs.Pages;
 
-namespace SwagLabs.PlaywrightTests
+namespace Tests.SwagLabs.NunitTests
 {
     public class BaseTest
     {
@@ -25,7 +25,6 @@ namespace SwagLabs.PlaywrightTests
         protected IBrowserContext? BrowserContext;
         protected IPage? PageInstance;
         protected string UserLogin;
-        protected ILogger? Logger;
 
         protected async Task<LoginPage> NavigateToLoginPageAsync(string url = "https://www.saucedemo.com/")
         {
@@ -42,12 +41,9 @@ namespace SwagLabs.PlaywrightTests
                 //.AddUserSecrets<BaseTest>(optional: true)
                 .Build();
 
-            LogHelper.InitializeLogger();
-            Logger = LogHelper.Logger;
-
-            Logger?.Information("================================================================================");
-            Logger.Information("============================== Test Suite Started ==============================");
-            Logger?.Information("================================================================================");
+            TestsLogger.LogInformation("================================================================================");
+            TestsLogger.LogInformation("============================== Test Suite Started ==============================");
+            TestsLogger.LogInformation("================================================================================");
 
             PlaywrightInstance = await Playwright.CreateAsync();
             switch (_configuration["Browser:Type"]?.ToLower())
@@ -62,22 +58,22 @@ namespace SwagLabs.PlaywrightTests
                     Browser = await PlaywrightInstance.Webkit.LaunchAsync(new BrowserTypeLaunchOptions { Headless = !Debugger.IsAttached });
                     break;
                 default:
-                    Logger.Warning("Unsupported browser type specified in configuration. Defaulting to Chromium.");
+                    TestsLogger.LogWarning("Unsupported browser type specified in configuration. Defaulting to Chromium.");
                     Browser = await PlaywrightInstance.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = !Debugger.IsAttached });
                     break;
             }
 
             UserLogin = Users[_configuration["Browser:DefaultUser"] ?? "StandardUser"];
 
-            Logger.Debug($"OneTimeSetup completed - Browser initialized with user: {UserLogin}");
+            TestsLogger.LogDebug($"OneTimeSetup completed - Browser initialized with user: {UserLogin}");
         }
 
         [SetUp]
         public async Task Setup()
         {
             string testName = TestContext.CurrentContext.Test.Name;
-            Logger?.Information("================================================================================");
-            Logger?.Information($"=== Starting test: {testName} ===");
+            TestsLogger.LogInformation("================================================================================");
+            TestsLogger.LogInformation($"=== Starting test: {testName} ===");
 
             // Każdy test dostaje własny context i stronę (izolacja)
             BrowserContext = await Browser!.NewContextAsync();
@@ -88,7 +84,7 @@ namespace SwagLabs.PlaywrightTests
                 await PageInstance.PauseAsync();
             }
 
-            Logger?.Debug($"Test context and page initialized for {testName}");
+            TestsLogger.LogDebug($"Test context and page initialized for {testName}");
         }
 
         [TearDown]
@@ -99,7 +95,7 @@ namespace SwagLabs.PlaywrightTests
 
             if (testResult == NUnit.Framework.Interfaces.TestStatus.Failed)
             {
-                Logger?.Error("Test {TestName} FAILED", testName);
+                TestsLogger.LogError("Test {TestName} FAILED", testName);
 
                 // Opcjonalnie: zrób screenshot
                 if (PageInstance != null)
@@ -107,14 +103,14 @@ namespace SwagLabs.PlaywrightTests
                     var screenshotPath = $"logs/Screenshots/{testName}_{DateTime.Now:yyyyMMdd_HHmmss}.png";
                     Directory.CreateDirectory(Path.GetDirectoryName(screenshotPath)!);
                     await PageInstance.ScreenshotAsync(new PageScreenshotOptions { Path = screenshotPath });
-                    Logger?.Information("Screenshot saved to {ScreenshotPath}", screenshotPath);
+                    TestsLogger.LogInformation("Screenshot saved to {ScreenshotPath}", screenshotPath);
                 }
             }
             else
             {
-                Logger?.Information("Test {TestName} finished with status: {TestResult}", testName, testResult);
+                TestsLogger.LogInformation("Test {TestName} finished with status: {TestResult}", testName, testResult);
             }
-            Logger?.Information("================================================================================");
+            TestsLogger.LogInformation("================================================================================");
 
             if (BrowserContext != null)
             {
@@ -127,9 +123,9 @@ namespace SwagLabs.PlaywrightTests
         [OneTimeTearDown]
         public async Task OneTimeTearDownAsync()
         {
-            Logger?.Information("================================================================================");
-            Logger?.Information("============================= Test Suite Completed =============================");
-            Logger?.Information("================================================================================");
+            TestsLogger.LogInformation("================================================================================");
+            TestsLogger.LogInformation("============================= Test Suite Completed =============================");
+            TestsLogger.LogInformation("================================================================================");
 
             if (Browser != null)
             {

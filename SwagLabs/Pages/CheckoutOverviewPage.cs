@@ -1,10 +1,10 @@
-﻿using Controls;
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 using Serilog;
 using Tests.Infrastructure;
-using static Controls.Control;
+using Tests.SwagLabs.Controls;
+using static Tests.SwagLabs.Controls.Control;
 
-namespace SwagLabs.Pages
+namespace Tests.SwagLabs.Pages
 {
     public class CheckoutOverviewPage : BasePage
     {
