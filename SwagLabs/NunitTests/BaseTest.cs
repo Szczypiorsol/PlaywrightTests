@@ -1,7 +1,6 @@
 ﻿using Microsoft.Playwright;
 using Serilog;
 using System.Diagnostics;
-using Microsoft.Extensions.Configuration;
 using Tests.Infrastructure;
 using Tests.SwagLabs.Pages;
 
@@ -19,7 +18,6 @@ namespace Tests.SwagLabs.NunitTests
             ["VisualUser"] = "visual_user",
         };
 
-        private static IConfiguration _configuration;
         protected IPlaywright? PlaywrightInstance;
         protected IBrowser? Browser;
         protected IBrowserContext? BrowserContext;
@@ -35,18 +33,12 @@ namespace Tests.SwagLabs.NunitTests
         [OneTimeSetUp]
         public async Task OneTimeSetupAsync()
         {
-            _configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                //.AddEnvironmentVariables()
-                //.AddUserSecrets<BaseTest>(optional: true)
-                .Build();
-
             TestsLogger.LogInformation("================================================================================");
             TestsLogger.LogInformation("============================== Test Suite Started ==============================");
             TestsLogger.LogInformation("================================================================================");
 
             PlaywrightInstance = await Playwright.CreateAsync();
-            switch (_configuration["Browser:Type"]?.ToLower())
+            switch (TestsConfiguration.Browser.ToLower())
             {
                 case "chromium":
                     Browser = await PlaywrightInstance.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = !Debugger.IsAttached });
@@ -63,7 +55,7 @@ namespace Tests.SwagLabs.NunitTests
                     break;
             }
 
-            UserLogin = Users[_configuration["Browser:DefaultUser"] ?? "StandardUser"];
+            UserLogin = Users[TestsConfiguration.DefaultUser];
 
             TestsLogger.LogDebug($"OneTimeSetup completed - Browser initialized with user: {UserLogin}");
         }
@@ -100,7 +92,7 @@ namespace Tests.SwagLabs.NunitTests
                 // Opcjonalnie: zrób screenshot
                 if (PageInstance != null)
                 {
-                    var screenshotPath = $"logs/Screenshots/{testName}_{DateTime.Now:yyyyMMdd_HHmmss}.png";
+                    var screenshotPath = $"{TestsConfiguration.ScreenshotPath}/{testName}_{DateTime.Now:yyyyMMdd_HHmmss}.png";
                     Directory.CreateDirectory(Path.GetDirectoryName(screenshotPath)!);
                     await PageInstance.ScreenshotAsync(new PageScreenshotOptions { Path = screenshotPath });
                     TestsLogger.LogInformation("Screenshot saved to {ScreenshotPath}", screenshotPath);

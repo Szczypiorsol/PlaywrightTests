@@ -16,7 +16,7 @@ namespace Tests.SwagLabs.NunitTests
             {
                 LoginPage loginPage = await NavigateToLoginPageAsync();
 
-                loginPage = await loginPage.LoginWithInvalidCredentialsAsync(Users["LockedOutUser"], "secret_sauce");
+                loginPage = await loginPage.LoginWithInvalidCredentialsAsync(Users["LockedOutUser"], TestsConfiguration.DefaultPassword);
                 await Assertions.Expect(loginPage.ErrorMessageTextBox.Locator)
                     .ToHaveTextAsync("Epic sadface: Sorry, this user has been locked out.");
             }
@@ -54,7 +54,7 @@ namespace Tests.SwagLabs.NunitTests
             {
                 LoginPage loginPage = await NavigateToLoginPageAsync();
 
-                loginPage = await loginPage.LoginWithInvalidCredentialsAsync("admin_user", "secret_sauce");
+                loginPage = await loginPage.LoginWithInvalidCredentialsAsync("admin_user", TestsConfiguration.DefaultPassword);
                 await Assertions.Expect(loginPage.ErrorMessageTextBox.Locator)
                     .ToHaveTextAsync("Epic sadface: Username and password do not match any user in this service");
             }
@@ -73,7 +73,7 @@ namespace Tests.SwagLabs.NunitTests
             {
                 LoginPage loginPage = await NavigateToLoginPageAsync();
 
-                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
+                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, TestsConfiguration.DefaultPassword);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(1);
 
                 CartPage cartPage = await productsPage.ClickOnCartButtonAsync();
@@ -113,7 +113,7 @@ namespace Tests.SwagLabs.NunitTests
             {
                 LoginPage loginPage = await NavigateToLoginPageAsync();
 
-                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
+                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, TestsConfiguration.DefaultPassword);
                 await Assertions.Expect(productsPage.ProductsListControl.ItemsLocator).ToHaveCountAsync(6);
 
                 productsPage = await productsPage.SelectSortOptionAsync("Name (Z to A)");
@@ -187,7 +187,7 @@ namespace Tests.SwagLabs.NunitTests
             {
                 LoginPage loginPage = await NavigateToLoginPageAsync();
 
-                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
+                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, TestsConfiguration.DefaultPassword);
                 await Assertions.Expect(productsPage.ProductsListControl.ItemsLocator).ToHaveCountAsync(6);
                 for (int i = 0; i < 6; i++)
                 {
@@ -227,7 +227,7 @@ namespace Tests.SwagLabs.NunitTests
             {
                 LoginPage loginPage = await NavigateToLoginPageAsync();
 
-                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
+                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, TestsConfiguration.DefaultPassword);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(0);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(2);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(4);
@@ -270,7 +270,7 @@ namespace Tests.SwagLabs.NunitTests
             {
                 LoginPage loginPage = await NavigateToLoginPageAsync();
 
-                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
+                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, TestsConfiguration.DefaultPassword);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(1);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(3);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(5);
@@ -313,7 +313,7 @@ namespace Tests.SwagLabs.NunitTests
             {
                 LoginPage loginPage = await NavigateToLoginPageAsync();
 
-                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
+                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, TestsConfiguration.DefaultPassword);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(0);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(3);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(4);
@@ -365,7 +365,7 @@ namespace Tests.SwagLabs.NunitTests
             {
                 LoginPage loginPage = await NavigateToLoginPageAsync();
 
-                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
+                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, TestsConfiguration.DefaultPassword);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(1);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(2);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(5);
@@ -375,7 +375,7 @@ namespace Tests.SwagLabs.NunitTests
 
                 loginPage = await cartPage.LogoutAsync();
 
-                productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
+                productsPage = await loginPage.LoginAsync(UserLogin, TestsConfiguration.DefaultPassword);
 
                 cartPage = await productsPage.ClickOnCartButtonAsync();
                 await Assertions.Expect(cartPage.ProductsListControl.ItemsLocator).ToHaveCountAsync(3);
@@ -416,7 +416,7 @@ namespace Tests.SwagLabs.NunitTests
             {
                 LoginPage loginPage = await NavigateToLoginPageAsync();
 
-                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
+                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, TestsConfiguration.DefaultPassword);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(1);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(2);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(5);
@@ -427,7 +427,7 @@ namespace Tests.SwagLabs.NunitTests
                 loginPage = await cartPage.LogoutAsync();
                 string userToLogin = UserLogin == Users["StandardUser"] ? Users["VisualUser"] : Users["StandardUser"];
 
-                productsPage = await loginPage.LoginAsync(userToLogin, "secret_sauce");
+                productsPage = await loginPage.LoginAsync(userToLogin, TestsConfiguration.DefaultPassword);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(4);
 
                 cartPage = await productsPage.ClickOnCartButtonAsync();
@@ -465,7 +465,7 @@ namespace Tests.SwagLabs.NunitTests
             {
                 LoginPage loginPage = await NavigateToLoginPageAsync();
 
-                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
+                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, TestsConfiguration.DefaultPassword);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(0);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(3);
                 await Assertions.Expect(productsPage.NumberOfProductsInCartTextBox.Locator).ToHaveTextAsync("2");
@@ -512,8 +512,8 @@ namespace Tests.SwagLabs.NunitTests
                 LoginPage loginPage2 = await LoginPage.InitAsync(pageInstance2);
                 string userToLogin = UserLogin == Users["StandardUser"] ? Users["VisualUser"] : Users["StandardUser"];
             
-                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, "secret_sauce");
-                ProductsPage productsPage2 = await loginPage2.LoginAsync(userToLogin, "secret_sauce");
+                ProductsPage productsPage = await loginPage.LoginAsync(UserLogin, TestsConfiguration.DefaultPassword);
+                ProductsPage productsPage2 = await loginPage2.LoginAsync(userToLogin, TestsConfiguration.DefaultPassword);
                 productsPage = await productsPage.ClickOnProductByOrdinalNumberAsync(1);
                 productsPage2 = await productsPage2.ClickOnProductByOrdinalNumberAsync(0);
          
