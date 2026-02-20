@@ -1,6 +1,6 @@
 ﻿using Reqnroll;
 
-namespace SwagLabs.E2E.Hooks
+namespace Tests.SwagLabs.ReqnrollTests.Hooks
 {
     internal class TestHooks
     {

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Playwright;
-using Serilog;
 using Tests.Infrastructure;
 using Tests.SwagLabs.Controls;
 using static Tests.SwagLabs.Controls.Control;

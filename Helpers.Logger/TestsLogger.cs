@@ -1,6 +1,4 @@
 ﻿using Serilog;
-using Microsoft.Extensions.Configuration;
-using Serilog.Events;
 
 namespace Tests.Infrastructure
 {
