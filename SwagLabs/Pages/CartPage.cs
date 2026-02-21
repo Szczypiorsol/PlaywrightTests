@@ -56,6 +56,24 @@ namespace Tests.SwagLabs.Pages
             return ProductsListControl.GetItemElementLocator(ordinalNumber, GetBy.CssSelector, "div.inventory_item_price");
         }
 
+        public async Task<bool> IsProductInCartAsync(string productName)
+        {
+            TestsLogger.LogInformation("Checking if product '{ProductName}' is in the cart...", productName);
+            EnsureInitialized();
+            int itemsCount = await ProductsListControl.ItemsLocator.CountAsync();
+            for (int i = 0; i < itemsCount; i++)
+            {
+                string currentProductName = await GetProductNameLocator(i).InnerTextAsync();
+                if (currentProductName.Equals(productName, StringComparison.OrdinalIgnoreCase))
+                {
+                    TestsLogger.LogDebug("Product '{ProductName}' found in the cart.", productName);
+                    return true;
+                }
+            }
+            TestsLogger.LogDebug("Product '{ProductName}' NOT found in the cart.", productName);
+            return false;
+        }
+
         public async Task<CartPage> RemoveCartItemAsync(int ordinalNumber)
         {
             TestsLogger.LogInformation("Removing item #{OrdinalNumber} from the cart...", ordinalNumber);
@@ -63,6 +81,25 @@ namespace Tests.SwagLabs.Pages
             await ProductsListControl.ClickOnItemElementAsync(ordinalNumber, "button");
             TestsLogger.LogDebug("Item #{OrdinalNumber} removed from the cart.", ordinalNumber);
             return await InitAsync(_page);
+        }
+
+        public async Task<CartPage> ClickRemoveProductByNameAsync(string productName)
+        {
+            TestsLogger.LogInformation("Removing product '{ProductName}' from the cart...", productName);
+            EnsureInitialized();
+            int itemsCount = await ProductsListControl.ItemsLocator.CountAsync();
+            for (int i = 0; i <= itemsCount; i++)
+            {
+                string currentProductName = await GetProductNameLocator(i).InnerTextAsync();
+                if (currentProductName.Equals(productName, StringComparison.OrdinalIgnoreCase))
+                {
+                    await ProductsListControl.ClickOnItemElementAsync(i, "button");
+                    TestsLogger.LogDebug("Product '{ProductName}' removed from the cart.", productName);
+                    return await InitAsync(_page);
+                }
+            }
+            TestsLogger.LogWarning("Product '{ProductName}' not found in the cart. No item removed.", productName);
+            return this;
         }
 
         public async Task<ProductsPage> ClickContinueShoppingAsync()

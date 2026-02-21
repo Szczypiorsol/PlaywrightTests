@@ -62,6 +62,27 @@ namespace Tests.SwagLabs.Pages
             return await InitAsync(_page);
         }
 
+        public async Task<ProductsPage> ClickOnProductByNameAsync(string productName)
+        {
+            TestsLogger.LogInformation("Adding product at ordinal number {productName} to cart...", productName);
+            EnsureInitialized();
+
+            int productsCount = await ProductsListControl.ItemsLocator.CountAsync();
+            for (int i = 0; i < productsCount; i++)
+            {
+                string currentProductName = await GetProductNameLocator(i).InnerTextAsync();
+                if (currentProductName.Equals(productName, StringComparison.OrdinalIgnoreCase))
+                {
+                    await ProductsListControl.ClickOnItemElementAsync(i, "button");
+                    TestsLogger.LogDebug("Added product '{ProductName}' at ordinal number {OrdinalNumber} to cart.", productName, i);
+                    return await InitAsync(_page);
+                }
+            }
+
+            TestsLogger.LogError("Product with name '{ProductName}' not found in the products list.", productName);
+            throw new ArgumentException($"Product with name '{productName}' not found in the products list.");
+        }
+
         public async Task<ProductsPage> RemoveProductByOrdinalNumberAsync(int ordinalNumber)
         {
             TestsLogger.LogInformation("Removing product at ordinal number {OrdinalNumber}...", ordinalNumber);
@@ -78,6 +99,33 @@ namespace Tests.SwagLabs.Pages
             await SortComboBox.SelectItemByTextAsync(optionText);
             TestsLogger.LogDebug("Selected sort option '{OptionText}'.", optionText);
             return await InitAsync(_page);
+        }
+
+        public async Task<bool> AreProductsSortedAsync(string sortingOption)
+        {
+            TestsLogger.LogInformation("Checking if products are sorted by '{SortingOption}'...", sortingOption);
+            EnsureInitialized();
+            int productsCount = await ProductsListControl.ItemsLocator.CountAsync();
+            List<string> productNames = [];
+            List<decimal> productPrices = [];
+            for (int i = 0; i < productsCount; i++)
+            {
+                string name = await GetProductNameLocator(i).InnerTextAsync();
+                string priceText = await GetProductPriceLocator(i).InnerTextAsync();
+                decimal price = decimal.TryParse(priceText.Replace("$", "").Trim(), out decimal parsedPrice) ? parsedPrice : 0;
+                productNames.Add(name);
+                productPrices.Add(price);
+            }
+            bool isSorted = sortingOption switch
+            {
+                "Name (A to Z)" => productNames.SequenceEqual(productNames.OrderBy(n => n)),
+                "Name (Z to A)" => productNames.SequenceEqual(productNames.OrderByDescending(n => n)),
+                "Price (low to high)" => productPrices.SequenceEqual(productPrices.OrderBy(p => p)),
+                "Price (high to low)" => productPrices.SequenceEqual(productPrices.OrderByDescending(p => p)),
+                _ => throw new ArgumentException($"Unknown sorting option: {sortingOption}")
+            };
+            TestsLogger.LogDebug("Products are sorted by '{SortingOption}': {IsSorted}.", sortingOption, isSorted);
+            return isSorted;
         }
 
         public async Task<CartPage> ClickOnCartButtonAsync()

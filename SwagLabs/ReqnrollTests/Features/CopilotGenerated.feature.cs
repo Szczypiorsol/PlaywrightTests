@@ -11,7 +11,7 @@
 #region Designer generated code
 #pragma warning disable
 using Reqnroll;
-namespace SwagLabs.ReqnrollTests.Features
+namespace Tests.SwagLabs.ReqnrollTests.Features
 {
     
     
@@ -27,7 +27,7 @@ namespace SwagLabs.ReqnrollTests.Features
         
         private static string[] featureTags = ((string[])(null));
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Sprzedaż produktów w sklepie Swag Labs (saucedemo.com)", null, global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "ReqnrollTests/Features", "Sprzedaż produktów w sklepie Swag Labs (saucedemo.com)", null, global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
 #line 1 "CopilotGenerated.feature"
 #line hidden
@@ -105,7 +105,7 @@ namespace SwagLabs.ReqnrollTests.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/CopilotGenerated.feature.ndjson", 18);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("ReqnrollTests/Features/CopilotGenerated.feature.ndjson", 18);
         }
         
         [global::NUnit.Framework.TestAttribute()]
