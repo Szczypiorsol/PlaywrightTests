@@ -10,7 +10,7 @@ namespace Tests.SwagLabs.ReqnrollTests.StepDefinitions
     [Binding]
     internal class CheckoutOverviewSteps(ScenarioContext scenarioContext)
     {
-        private CheckoutOverviewPage? _checkoutOverviewPage = new(scenarioContext.Get<IPage>());
+        private readonly CheckoutOverviewPage? _checkoutOverviewPage = new(scenarioContext.Get<IPage>());
 
         [When(@"Finalizuje zamówienie")]
         public async Task FinishCheckout()

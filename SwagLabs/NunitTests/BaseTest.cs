@@ -6,7 +6,7 @@ using Tests.SwagLabs.Pages;
 
 namespace Tests.SwagLabs.NunitTests
 {
-    public class BaseTest
+    public abstract class BaseTest
     {
         protected static readonly Dictionary<string, string> Users = new()
         {

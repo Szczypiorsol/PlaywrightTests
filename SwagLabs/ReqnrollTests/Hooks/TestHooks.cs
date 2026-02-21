@@ -57,8 +57,8 @@ namespace Tests.SwagLabs.ReqnrollTests.Hooks
                 await PageInstance.PauseAsync();
             }
 
-            scenarioContext.Set(BrowserContext);
-            scenarioContext.Set(PageInstance);
+            scenarioContext.Set(BrowserContext, "BrowserContext");
+            scenarioContext.Set(PageInstance, "PageInstance");
 
             TestsLogger.LogDebug($"Test context and page initialized for {testName}");
         }

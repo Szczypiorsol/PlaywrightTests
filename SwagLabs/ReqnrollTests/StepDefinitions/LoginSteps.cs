@@ -7,7 +7,7 @@ namespace Tests.SwagLabs.ReqnrollTests.StepDefinitions
     [Binding]
     internal class LoginSteps(ScenarioContext scenarioContext)
     {
-        private readonly IPage _page = scenarioContext.Get<IPage>();
+        private readonly IPage _page = scenarioContext.Get<IPage>("PageInstance");
         private LoginPage? _loginPage;
 
         [Given(@"Użytkownik jest na stronie logowania Swag Labs")]

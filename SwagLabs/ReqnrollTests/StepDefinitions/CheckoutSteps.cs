@@ -7,7 +7,7 @@ namespace Tests.SwagLabs.ReqnrollTests.StepDefinitions
     [Binding]
     internal class CheckoutSteps(ScenarioContext scenarioContext)
     {
-        private CheckoutPage? _checkoutPage = new(scenarioContext.Get<IPage>());
+        private readonly CheckoutPage? _checkoutPage = new(scenarioContext.Get<IPage>());
 
         [When(@"Podaje dane klienta: imię ""(.*)"", nazwisko ""(.*)"", kod ""(.*)""")]
         public async Task EnterCheckoutInformation(string firstName, string lastName, string postalCode)
